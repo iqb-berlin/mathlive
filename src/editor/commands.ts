@@ -167,10 +167,6 @@ function performWithFeedback(
 
   if (MathfieldElement.keypressVibration && canVibrate())
     navigator.vibrate(HAPTIC_FEEDBACK_DURATION);
-
-  const info = getCommandInfo(selector);
-  globalThis.MathfieldElement.playSound(info?.audioFeedback ?? 'keypress');
-
   const result = mathfield.executeCommand(selector);
   mathfield.scrollIntoView();
   return result;

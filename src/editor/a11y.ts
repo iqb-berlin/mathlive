@@ -101,10 +101,6 @@ export function defaultAnnounceHook(
   let liveText = '';
 
   if (action === 'plonk') {
-    // Use this sound to indicate minor errors, for
-    // example when an action has no effect.
-    globalThis.MathfieldElement.playSound('plonk');
-    // As a side effect, reset the keystroke buffer
     mathfield.flushInlineShortcutBuffer();
     return;
   }

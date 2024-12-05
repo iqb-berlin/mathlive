@@ -3394,7 +3394,7 @@ typically just uppercase and lowercase letters, and digits 0-9 in some cases.
 const version: object;
 ```
 
-Current version: `0.102.0`
+Current version: `{{SDK_VERSION}}`
 
 The version string of the SDK using the [semver](https://semver.org/) convention:
 
@@ -3413,7 +3413,7 @@ The version string of the SDK using the [semver](https://semver.org/) convention
 ##### version.mathlive
 
 ```ts
-mathlive: string = '0.102.0';
+mathlive: string = '{{SDK_VERSION}}';
 ```
 
 </MemberCard>
@@ -6749,7 +6749,7 @@ static speakHook: (text) => void = defaultSpeakHook;
 ##### MathfieldElement.version
 
 ```ts
-static version: string = '0.102.0';
+static version: string = '{{SDK_VERSION}}';
 ```
 
 </MemberCard>
@@ -7007,36 +7007,7 @@ set static isFunction(value): void
 
 </MemberCard>
 
-<a id="plonksound" name="plonksound"></a>
 
-<MemberCard>
-
-##### MathfieldElement.plonkSound
-
-```ts
-get static plonkSound(): string
-```
-
-Sound played to provide feedback when a command has no effect, for example
-when pressing the spacebar at the root level.
-
-The property is either:
-- a string, the name of an audio file in the `soundsDirectory` directory
-- null to turn off the sound
-
-```ts
-set static plonkSound(value): void
-```
-
-• **value**: `string`
-
-`string`
-
-</MemberCard>
-
-<a id="speechengine" name="speechengine"></a>
-
-<MemberCard>
 
 ##### MathfieldElement.speechEngine
 
@@ -7260,26 +7231,6 @@ showMenu(_): boolean
 
 </MemberCard>
 
-<a id="loadsound" name="loadsound"></a>
-
-<MemberCard>
-
-##### MathfieldElement.loadSound()
-
-```ts
-static loadSound(sound): Promise<void>
-```
-
-• **sound**: 
-  \| `"keypress"`
-  \| `"plonk"`
-  \| `"delete"`
-  \| `"spacebar"`
-  \| `"return"`
-
-`Promise`\<`void`\>
-
-</MemberCard>
 
 <a id="openurl" name="openurl"></a>
 
@@ -7297,26 +7248,7 @@ static openUrl(href): void
 
 </MemberCard>
 
-<a id="playsound" name="playsound"></a>
 
-<MemberCard>
-
-##### MathfieldElement.playSound()
-
-```ts
-static playSound(name): Promise<void>
-```
-
-• **name**: 
-  \| `"keypress"`
-  \| `"plonk"`
-  \| `"delete"`
-  \| `"spacebar"`
-  \| `"return"`
-
-`Promise`\<`void`\>
-
-</MemberCard>
 
 #### Prompts
 

@@ -45,9 +45,7 @@
     "./fonts.css": "./dist/mathlive-fonts.css",
     "./static.css": "./dist/mathlive-static.css",
     "./fonts/*": "./dist/fonts/*",
-    "./sounds/*": "./dist/sounds/*",
-    "./fonts/": "./dist/fonts/",
-    "./sounds/": "./dist/sounds/"
+    "./fonts/": "./dist/fonts/"
   },
   "repository": {
     "type": "git",

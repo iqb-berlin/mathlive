@@ -1115,8 +1115,6 @@ If you are using Vue, this may be because you are using the runtime-only build o
     if (options.feedback) {
       if (globalThis.MathfieldElement.keypressVibration && canVibrate())
         navigator.vibrate(HAPTIC_FEEDBACK_DURATION);
-
-      globalThis.MathfieldElement.playSound('keypress');
     }
 
     if (s === '\\\\') {

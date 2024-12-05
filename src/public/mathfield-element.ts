@@ -87,7 +87,6 @@ if (!isBrowser()) {
   * by focusing an element adjacent to the mathfield.
   *
   * If the event is canceled (i.e. `evt.preventDefault()` is called inside your
-  * event handler), the default behavior is to play a "plonk" sound.
   *
   * @category Web Component
  */
@@ -305,9 +304,7 @@ const DEPRECATED_OPTIONS = {
   virtualKeyboardMode: 'mf.mathVirtualKeyboardPolicy = ...',
   customVirtualKeyboardLayers: 'mathVirtualKeyboard.layers = ...',
   customVirtualKeyboards: 'mathVirtualKeyboard.layouts = ...',
-  keypressSound: 'mathVirtualKeyboard.keypressSound = ...',
   keypressVibration: 'mathVirtualKeyboard.keypressVibration = ...',
-  plonkSound: 'mathVirtualKeyboard.plonkSound = ...',
   virtualKeyboardContainer: 'mathVirtualKeyboard.container = ...',
   virtualKeyboardLayout: 'mathVirtualKeyboard.alphabeticLayout = ...',
   virtualKeyboardTheme: 'No longer supported',
@@ -324,7 +321,6 @@ const DEPRECATED_OPTIONS = {
   speakHook: '`MathfieldElement.speakHook`',
   computeEngine: '`MathfieldElement.computeEngine`',
   fontsDirectory: '`MathfieldElement.fontsDirectory`',
-  soundsDirectory: '`MathfieldElement.soundsDirectory`',
   createHTML: '`MathfieldElement.createHTML`',
   onExport: '`mf.onExport`',
   onInlineShortcut: '`mf.onInlineShortcut`',
@@ -629,10 +625,9 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
   static openUrl = (href: string): void => {
     if (!href) return;
     const url = new URL(href);
-    if (!['http:', 'https:', 'file:'].includes(url.protocol.toLowerCase())) {
-      MathfieldElement.playSound('plonk');
+    if (!['http:', 'https:', 'file:'].includes(url.protocol.toLowerCase()))
       return;
-    }
+
     window.open(url, '_blank');
   };
 
@@ -648,34 +643,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
   /** @internal */
   private static _fontsDirectory: string | null = './fonts';
 
-  /**
-   * A URL fragment pointing to the directory containing the optional
-   * sounds used to provide feedback while typing.
-   *
-   * Some default sounds are available in the `/dist/sounds` directory of the SDK.
-   *
-   * Use `null` to prevent any sound from being loaded.
-   * @category Virtual Keyboard
-   */
-  static get soundsDirectory(): string | null {
-    return this._soundsDirectory;
-  }
-  static set soundsDirectory(value: string | null) {
-    this._soundsDirectory = value;
-    this.audioBuffers = {};
-  }
-
-  /** @internal */
-  get soundsDirectory(): never {
-    throw new Error('Use MathfieldElement.soundsDirectory instead');
-  }
-  /** @internal */
-  set soundsDirectory(_value: unknown) {
-    throw new Error('Use MathfieldElement.soundsDirectory instead');
-  }
-
-  /** @internal */
-  private static _soundsDirectory: string | null = './sounds';
 
   /**
    * When a key on the virtual keyboard is pressed, produce a short haptic
@@ -702,91 +669,7 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
    * audio file in the `soundsDirectory` directory or `null` to suppress the sound.
    * @category Virtual Keyboard
    */
-  static get keypressSound(): Readonly<{
-    spacebar: null | string;
-    return: null | string;
-    delete: null | string;
-    default: null | string;
-  }> {
-    return this._keypressSound;
-  }
-  static set keypressSound(
-    value:
-      | null
-      | string
-      | {
-          spacebar?: null | string;
-          return?: null | string;
-          delete?: null | string;
-          default: null | string;
-        }
-  ) {
-    this.audioBuffers = {};
 
-    if (value === null) {
-      this._keypressSound = {
-        spacebar: null,
-        return: null,
-        delete: null,
-        default: null,
-      };
-    } else if (typeof value === 'string') {
-      this._keypressSound = {
-        spacebar: value,
-        return: value,
-        delete: value,
-        default: value,
-      };
-    } else if (typeof value === 'object' && 'default' in value) {
-      this._keypressSound = {
-        spacebar: value.spacebar ?? value.default,
-        return: value.return ?? value.default,
-        delete: value.delete ?? value.default,
-        default: value.default,
-      };
-    }
-  }
-  /** @internal */
-  private static _keypressSound: {
-    spacebar: null | string;
-    return: null | string;
-    delete: null | string;
-    default: null | string;
-  } = {
-    spacebar: 'keypress-spacebar.wav',
-    return: 'keypress-return.wav',
-    delete: 'keypress-delete.wav',
-    default: 'keypress-standard.wav',
-  };
-
-  /** @ignore */
-  private static _plonkSound: string | null = 'plonk.wav';
-
-  /**
-   * Sound played to provide feedback when a command has no effect, for example
-   * when pressing the spacebar at the root level.
-   *
-   * The property is either:
-   * - a string, the name of an audio file in the `soundsDirectory` directory
-   * - null to turn off the sound
-   */
-  static get plonkSound(): string | null {
-    return this._plonkSound;
-  }
-  static set plonkSound(value: string | null) {
-    this.audioBuffers = {};
-    this._plonkSound = value;
-  }
-
-  /** @internal */
-  private static audioBuffers: { [key: string]: AudioBuffer } = {};
-  /** @internal */
-  private static _audioContext: AudioContext;
-  /** @internal */
-  private static get audioContext(): AudioContext {
-    if (!this._audioContext) this._audioContext = new AudioContext();
-    return this._audioContext;
-  }
 
   /**
    * Support for [Trusted Type](https://w3c.github.io/webappsec-trusted-types/dist/spec/).
@@ -1105,82 +988,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
     reparseAllMathfields();
   }
 
-  static async loadSound(
-    sound: 'plonk' | 'keypress' | 'spacebar' | 'delete' | 'return'
-  ): Promise<void> {
-    //  Clear out the cached audio buffer
-    delete this.audioBuffers[sound];
-
-    let soundFile: string | undefined | null = '';
-    switch (sound) {
-      case 'keypress':
-        soundFile = this._keypressSound.default;
-        break;
-      case 'return':
-        soundFile = this._keypressSound.return;
-        break;
-      case 'spacebar':
-        soundFile = this._keypressSound.spacebar;
-        break;
-      case 'delete':
-        soundFile = this._keypressSound.delete;
-        break;
-      case 'plonk':
-        soundFile = this.plonkSound;
-        break;
-    }
-
-    if (typeof soundFile !== 'string') return;
-    soundFile = soundFile.trim();
-    const soundsDirectory = this.soundsDirectory;
-    if (
-      soundsDirectory === undefined ||
-      soundsDirectory === null ||
-      soundsDirectory === 'null' ||
-      soundFile === 'none' ||
-      soundFile === 'null'
-    )
-      return;
-
-    // Fetch the audio buffer
-    try {
-      const response = await fetch(
-        await resolveUrl(`${soundsDirectory}/${soundFile}`)
-      );
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-      this.audioBuffers[sound] = audioBuffer;
-    } catch {}
-  }
-
-  static async playSound(
-    name: 'keypress' | 'spacebar' | 'delete' | 'plonk' | 'return'
-  ): Promise<void> {
-    // According to MDN:
-    // https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/state
-    //In iOS Safari, when a user leaves the page (e.g. switches tabs, minimizes the browser, or turns off the screen) the audio context's state changes to "interrupted" and needs to be resumed
-
-    if (
-      this.audioContext.state === 'suspended' ||
-      this.audioContext.state === ('interrupted' as AudioContextState)
-    )
-      await this.audioContext.resume();
-
-    if (!this.audioBuffers[name]) await this.loadSound(name);
-    if (!this.audioBuffers[name]) return;
-
-    // A sound source can't be played twice, so creeate a new one
-    const soundSource = this.audioContext.createBufferSource();
-    soundSource.buffer = this.audioBuffers[name];
-
-    // Set the volume
-    const gainNode = this.audioContext.createGain();
-    gainNode.gain.value = AUDIO_FEEDBACK_VOLUME;
-    soundSource.connect(gainNode).connect(this.audioContext.destination);
-
-    soundSource.start();
-  }
-
   /** @internal */
   private _mathfield: null | _Mathfield;
 
@@ -1249,7 +1056,7 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
           'color:#db1111; font-size: 1.1rem'
         );
         console.warn(
-          `Some of the options passed to \`new MathfieldElement(...)\` are invalid. 
+          `Some of the options passed to \`new MathfieldElement(...)\` are invalid.
           See mathfield/changelog/ for details.`
         );
         for (const warning of warnings) console.warn(warning);
@@ -1436,9 +1243,9 @@ import 'https://unpkg.com/@cortex-js/compute-engine?module';
     if (!window[Symbol.for('io.cortexjs.compute-engine')]) {
       console.error(
         `MathLive {{SDK_VERSION}}: The CortexJS Compute Engine library is not available.
-        
+
         Load the library, for example with:
-        
+
         import "https://unpkg.com/@cortex-js/compute-engine?module"`
       );
       return null;
@@ -1454,9 +1261,9 @@ import 'https://unpkg.com/@cortex-js/compute-engine?module';
     if (!window[Symbol.for('io.cortexjs.compute-engine')]) {
       console.error(
         `MathLive {{SDK_VERSION}}: The Compute Engine library is not available.
-        
+
         Load the library, for example with:
-        
+
         import "https://unpkg.com/@cortex-js/compute-engine?module"`
       );
     }
@@ -2339,7 +2146,7 @@ mf.macros = {
     this._setOptions({ backgroundColorMap: value });
   }
 
-  /** @category Customization 
+  /** @category Customization
   * Control the letter shape style:
 
   | `letterShapeStyle` | xyz | ABC | αβɣ | ΓΔΘ |

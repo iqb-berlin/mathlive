@@ -499,9 +499,6 @@ export function onInput(
   // 1/ Focus (and scroll into view), then provide audio and haptic feedback
   //
   if (options.focus) mathfield.focus();
-
-  if (options.feedback) globalThis.MathfieldElement.playSound('keypress');
-
   //
   // 2/ Switch mode if requested
   //
