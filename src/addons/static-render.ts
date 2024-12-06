@@ -2,7 +2,7 @@
 
 import type { LayoutOptions, StaticRenderOptions } from '../public/options';
 import { injectStylesheet } from '../common/stylesheet';
-import { loadFonts } from '../core/fonts';
+
 import { parseMathString } from '../formats/parse-math-string';
 
 import '../core/atom';
@@ -514,6 +514,7 @@ export function _renderMathInElement(
   options?: StaticRenderOptions
 ): void {
   try {
+    console.log('_renderMathInElement');
     const optionsPrivate: StaticRenderOptionsPrivate = {
       ...DEFAULT_AUTO_RENDER_OPTIONS,
       ...options,
@@ -546,7 +547,6 @@ export function _renderMathInElement(
     // Load the fonts and inject the stylesheet once to
     // avoid having to do it many times in the case of a `renderMathInDocument()`
     // call.
-    void loadFonts();
     injectStylesheet('core');
 
     scanElement(element, optionsPrivate);

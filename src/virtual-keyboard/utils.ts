@@ -6,7 +6,7 @@ import { SelectorPrivate } from '../editor/types';
 import { getActiveKeyboardLayout } from '../editor/keyboard-layout';
 
 import { releaseStylesheet, injectStylesheet } from '../common/stylesheet';
-import { loadFonts } from '../core/fonts';
+
 import { Context } from '../core/context';
 
 import { LAYOUTS } from './data';
@@ -429,7 +429,7 @@ function makeSyntheticKeycap(element: HTMLElement): void {
 function injectStylesheets(): void {
   injectStylesheet('virtual-keyboard');
   injectStylesheet('core');
-  void loadFonts();
+  console.log('injectStylesheets');
 }
 
 export function releaseStylesheets(): void {

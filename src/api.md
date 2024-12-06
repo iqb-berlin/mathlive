@@ -3394,7 +3394,7 @@ typically just uppercase and lowercase letters, and digits 0-9 in some cases.
 const version: object;
 ```
 
-Current version: `{{SDK_VERSION}}`
+Current version: `0.102.0`
 
 The version string of the SDK using the [semver](https://semver.org/) convention:
 
@@ -3413,7 +3413,7 @@ The version string of the SDK using the [semver](https://semver.org/) convention
 ##### version.mathlive
 
 ```ts
-mathlive: string = '{{SDK_VERSION}}';
+mathlive: string = '0.102.0';
 ```
 
 </MemberCard>
@@ -5814,6 +5814,68 @@ set macros(value): void
 </MemberCard>
 
 #### Customization
+Control the letter shape style:
+
+| `letterShapeStyle` | xyz | ABC | αβɣ | ΓΔΘ |
+| ------------------ | --- | --- | --- | --- |
+| `iso`              | it  | it  | it  | it  |
+| `tex`              | it  | it  | it  | up  |
+| `french`           | it  | up  | up  | up  |
+| `upright`          | up  | up  | up  | up  |
+
+(it) = italic (up) = upright
+
+The default letter shape style is `auto`, which indicates that `french`
+should be used if the locale is "french", and `tex` otherwise.
+
+**Historical Note**
+
+Where do the "french" rules come from? The
+TeX standard font, Computer Modern, is based on Monotype 155M, itself
+based on the Porson greek font which was one of the most widely used
+Greek fonts in english-speaking countries. This font had upright
+capitals, but slanted lowercase. In France, the traditional font for
+greek was Didot, which has both upright capitals and lowercase.
+
+As for roman uppercase, they are recommended by "Lexique des règles
+typographiques en usage à l’Imprimerie Nationale". It should be noted
+that this convention is not universally followed.
+
+<a id="lettershapestyle" name="lettershapestyle"></a>
+
+<MemberCard>
+
+##### MathfieldElement.letterShapeStyle
+
+```ts
+get letterShapeStyle(): 
+  | "auto"
+  | "tex"
+  | "iso"
+  | "french"
+  | "upright"
+```
+
+```ts
+set letterShapeStyle(value): void
+```
+
+• **value**: 
+  \| `"auto"`
+  \| `"tex"`
+  \| `"iso"`
+  \| `"french"`
+  \| `"upright"`
+
+  \| `"auto"`
+  \| `"tex"`
+  \| `"iso"`
+  \| `"french"`
+  \| `"upright"`
+
+</MemberCard>
+
+#### Customization
 If `"auto"` a popover with commands to edit an environment (matrix)
 is displayed when the virtual keyboard is displayed.
 
@@ -6257,68 +6319,6 @@ set smartMode(value): void
 
 </MemberCard>
 
-#### Customization 
-Control the letter shape style:
-
-| `letterShapeStyle` | xyz | ABC | αβɣ | ΓΔΘ |
-| ------------------ | --- | --- | --- | --- |
-| `iso`              | it  | it  | it  | it  |
-| `tex`              | it  | it  | it  | up  |
-| `french`           | it  | up  | up  | up  |
-| `upright`          | up  | up  | up  | up  |
-
-(it) = italic (up) = upright
-
-The default letter shape style is `auto`, which indicates that `french`
-should be used if the locale is "french", and `tex` otherwise.
-
-**Historical Note**
-
-Where do the "french" rules come from? The
-TeX standard font, Computer Modern, is based on Monotype 155M, itself
-based on the Porson greek font which was one of the most widely used
-Greek fonts in english-speaking countries. This font had upright
-capitals, but slanted lowercase. In France, the traditional font for
-greek was Didot, which has both upright capitals and lowercase.
-
-As for roman uppercase, they are recommended by "Lexique des règles
-typographiques en usage à l’Imprimerie Nationale". It should be noted
-that this convention is not universally followed.
-
-<a id="lettershapestyle" name="lettershapestyle"></a>
-
-<MemberCard>
-
-##### MathfieldElement.letterShapeStyle
-
-```ts
-get letterShapeStyle(): 
-  | "auto"
-  | "tex"
-  | "iso"
-  | "french"
-  | "upright"
-```
-
-```ts
-set letterShapeStyle(value): void
-```
-
-• **value**: 
-  \| `"auto"`
-  \| `"tex"`
-  \| `"iso"`
-  \| `"french"`
-  \| `"upright"`
-
-  \| `"auto"`
-  \| `"tex"`
-  \| `"iso"`
-  \| `"french"`
-  \| `"upright"`
-
-</MemberCard>
-
 #### Focus
 
 <a id="blur" name="blur"></a>
@@ -6749,7 +6749,7 @@ static speakHook: (text) => void = defaultSpeakHook;
 ##### MathfieldElement.version
 
 ```ts
-static version: string = '{{SDK_VERSION}}';
+static version: string = '0.102.0';
 ```
 
 </MemberCard>
@@ -6913,61 +6913,7 @@ set static computeEngine(value): void
 
 </MemberCard>
 
-<a id="fontsdirectory" name="fontsdirectory"></a>
 
-<MemberCard>
-
-##### MathfieldElement.fontsDirectory
-
-```ts
-get static fontsDirectory(): string
-```
-
-A URL fragment pointing to the directory containing the fonts
-necessary to render a formula.
-
-These fonts are available in the `/dist/fonts` directory of the SDK.
-
-Customize this value to reflect where you have copied these fonts,
-or to use the CDN version.
-
-The default value is `"./fonts"`. Use `null` to prevent
-any fonts from being loaded.
-
-Changing this setting after the mathfield has been created will have
-no effect.
-
-```javascript
-{
-     // Use the CDN version
-     fontsDirectory: ''
-}
-```
-
-```javascript
-{
-     // Use a directory called "fonts", located next to the
-     // `mathlive.js` (or `mathlive.mjs`) file.
-     fontsDirectory: './fonts'
-}
-```
-
-```javascript
-{
-     // Use a directory located at the root of your website
-     fontsDirectory: 'https://example.com/fonts'
-}
-```
-
-```ts
-set static fontsDirectory(value): void
-```
-
-• **value**: `string`
-
-`string`
-
-</MemberCard>
 
 <a id="formassociated" name="formassociated"></a>
 
@@ -7007,7 +6953,9 @@ set static isFunction(value): void
 
 </MemberCard>
 
+<a id="speechengine" name="speechengine"></a>
 
+<MemberCard>
 
 ##### MathfieldElement.speechEngine
 
@@ -7231,7 +7179,6 @@ showMenu(_): boolean
 
 </MemberCard>
 
-
 <a id="openurl" name="openurl"></a>
 
 <MemberCard>
@@ -7247,8 +7194,6 @@ static openUrl(href): void
 `void`
 
 </MemberCard>
-
-
 
 #### Prompts
 
@@ -7599,109 +7544,6 @@ set virtualKeyboardTargetOrigin(value): void
 
 </MemberCard>
 
-<a id="keypresssound" name="keypresssound"></a>
-
-<MemberCard>
-
-##### MathfieldElement.keypressSound
-
-```ts
-get static keypressSound(): Readonly<object>
-```
-
-When a key on the virtual keyboard is pressed, produce a short audio
-feedback.
-
-If the property is set to a `string`, the same sound is played in all
-cases. Otherwise, a distinct sound is played:
-
--   `delete` a sound played when the delete key is pressed
--   `return` ... when the return/tab key is pressed
--   `spacebar` ... when the spacebar is pressed
--   `default` ... when any other key is pressed. This property is required,
-    the others are optional. If they are missing, this sound is played as
-    well.
-
-The value of the properties should be either a string, the name of an
-audio file in the `soundsDirectory` directory or `null` to suppress the sound.
-
-```ts
-set static keypressSound(value): void
-```
-
-• **value**: `string` \| `object`
-
-`Readonly`\<`object`\>
-
-<MemberCard>
-
-###### keypressSound.default
-
-```ts
-default: string;
-```
-
-</MemberCard>
-
-<MemberCard>
-
-###### keypressSound.delete
-
-```ts
-delete: string;
-```
-
-</MemberCard>
-
-<MemberCard>
-
-###### keypressSound.return
-
-```ts
-return: string;
-```
-
-</MemberCard>
-
-<MemberCard>
-
-###### keypressSound.spacebar
-
-```ts
-spacebar: string;
-```
-
-</MemberCard>
-
-</MemberCard>
-
-<a id="soundsdirectory" name="soundsdirectory"></a>
-
-<MemberCard>
-
-##### MathfieldElement.soundsDirectory
-
-```ts
-get static soundsDirectory(): string
-```
-
-A URL fragment pointing to the directory containing the optional
-sounds used to provide feedback while typing.
-
-Some default sounds are available in the `/dist/sounds` directory of the SDK.
-
-Use `null` to prevent any sound from being loaded.
-
-```ts
-set static soundsDirectory(value): void
-```
-
-• **value**: `string`
-
-`string`
-
-</MemberCard>
-
 <a id="mathfieldelementattributes" name="mathfieldelementattributes"></a>
 
 ### MathfieldElementAttributes
@@ -8029,7 +7871,6 @@ This event provides an opportunity to handle this situation, for example
 by focusing an element adjacent to the mathfield.
 
 If the event is canceled (i.e. `evt.preventDefault()` is called inside your
-event handler), the default behavior is to play a "plonk" sound.
 
 #### Type declaration
 

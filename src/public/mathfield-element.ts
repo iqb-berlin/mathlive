@@ -35,12 +35,10 @@ import {
   isInIframe,
   isTouchCapable,
 } from '../ui/utils/capabilities';
-import { resolveUrl } from '../common/script-url';
 import {
   reparseAllMathfields,
   requestUpdate,
 } from '../editor-mathfield/render';
-import { reloadFonts, loadFonts } from '../core/fonts';
 import { defaultSpeakHook } from '../editor/speech';
 import { defaultReadAloudHook } from '../editor/speech-read-aloud';
 import type { ComputeEngine } from '@cortex-js/compute-engine';
@@ -320,7 +318,6 @@ const DEPRECATED_OPTIONS = {
   readAloudHook: '`MathfieldElement.readAloudHook`',
   speakHook: '`MathfieldElement.speakHook`',
   computeEngine: '`MathfieldElement.computeEngine`',
-  fontsDirectory: '`MathfieldElement.fontsDirectory`',
   createHTML: '`MathfieldElement.createHTML`',
   onExport: '`mf.onExport`',
   onInlineShortcut: '`mf.onInlineShortcut`',
@@ -574,53 +571,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
     ];
   }
 
-  /**
-   * A URL fragment pointing to the directory containing the fonts
-   * necessary to render a formula.
-   *
-   * These fonts are available in the `/dist/fonts` directory of the SDK.
-   *
-   * Customize this value to reflect where you have copied these fonts,
-   * or to use the CDN version.
-   *
-   * The default value is `"./fonts"`. Use `null` to prevent
-   * any fonts from being loaded.
-   *
-   * Changing this setting after the mathfield has been created will have
-   * no effect.
-   *
-   * ```javascript
-   * {
-   *      // Use the CDN version
-   *      fontsDirectory: ''
-   * }
-   * ```
-   *
-   * ```javascript
-   * {
-   *      // Use a directory called "fonts", located next to the
-   *      // `mathlive.js` (or `mathlive.mjs`) file.
-   *      fontsDirectory: './fonts'
-   * }
-   * ```
-   *
-   * ```javascript
-   * {
-   *      // Use a directory located at the root of your website
-   *      fontsDirectory: 'https://example.com/fonts'
-   * }
-   * ```
-   *
-   */
-  static get fontsDirectory(): string | null {
-    return this._fontsDirectory;
-  }
-  static set fontsDirectory(value: string | null) {
-    if (value !== this._fontsDirectory) {
-      this._fontsDirectory = value;
-      reloadFonts();
-    }
-  }
 
   static openUrl = (href: string): void => {
     if (!href) return;
@@ -630,18 +580,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
 
     window.open(url, '_blank');
   };
-
-  /** @internal */
-  get fontsDirectory(): never {
-    throw new Error('Use MathfieldElement.fontsDirectory instead');
-  }
-  /** @internal */
-  set fontsDirectory(_value: unknown) {
-    throw new Error('Use MathfieldElement.fontsDirectory instead');
-  }
-
-  /** @internal */
-  private static _fontsDirectory: string | null = './fonts';
 
 
   /**
@@ -1867,7 +1805,7 @@ import "https://unpkg.com/@cortex-js/compute-engine?module";
     });
 
     // Load the fonts
-    void loadFonts();
+    console.log('Loading fonts in connectedCallback');
   }
 
   /**
