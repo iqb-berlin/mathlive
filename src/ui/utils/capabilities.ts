@@ -10,14 +10,6 @@ export function isTouchCapable(): boolean {
   return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 }
 
-export function isInIframe(): boolean {
-  try {
-    return window.self !== window.top;
-  } catch (e) {
-    return true;
-  }
-}
-
 export function canVibrate(): boolean {
   return typeof navigator.vibrate === 'function';
 }

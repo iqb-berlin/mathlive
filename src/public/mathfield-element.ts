@@ -30,11 +30,7 @@ import {
 import { _Mathfield } from '../editor-mathfield/mathfield-private';
 import { offsetFromPoint } from '../editor-mathfield/pointer-input';
 import { getElementInfo, getHref } from '../editor-mathfield/utils';
-import {
-  isBrowser,
-  isInIframe,
-  isTouchCapable,
-} from '../ui/utils/capabilities';
+import { isBrowser, isTouchCapable } from '../ui/utils/capabilities';
 import {
   reparseAllMathfields,
   requestUpdate,
@@ -96,13 +92,10 @@ export type MoveOutEvent = {
  * - `"auto"`: the virtual keyboard is triggered when a
  * mathfield is focused on a touch capable device.
  * - `"manual"`: the virtual keyboard is not triggered automatically
- * - `"sandboxed"`: the virtual keyboard is displayed in the current browsing
- * context (iframe) if it has a defined container or is the top-level browsing
- * context.
- *
+
  * @category Virtual Keyboard
  */
-export type VirtualKeyboardPolicy = 'auto' | 'manual' | 'sandboxed';
+export type VirtualKeyboardPolicy = 'auto' | 'manual';
 
 declare global {
   /**
@@ -275,8 +268,6 @@ export interface MathfieldElementAttributes {
    */
   'virtual-keyboard-target-origin': string;
 }
-
-const AUDIO_FEEDBACK_VOLUME = 0.5; // From 0.0 to 1.0
 
 /** @internal */
 const DEPRECATED_OPTIONS = {
@@ -1671,7 +1662,7 @@ import "https://unpkg.com/@cortex-js/compute-engine?module";
     if (
       evt.type === 'blur' &&
       Scrim.scrim?.state === 'closed' &&
-      !(isTouchCapable() && isInIframe())
+      !(isTouchCapable())
     )
       this._mathfield?.blur();
   }

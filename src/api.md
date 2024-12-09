@@ -198,7 +198,7 @@ mf.executeCommand('copyToClipboard');
 Some commands require an argument, for example to insert a character:
 
 ```ts
-mf.executeCommand('insert("x")' });
+mf.executeCommand('insert("x")');
 ```
 
 The argument can be specified in parentheses after the command name, or
@@ -1908,7 +1908,7 @@ mathModeSpace: string;
 ##### EditingOptions.mathVirtualKeyboardPolicy
 
 ```ts
-mathVirtualKeyboardPolicy: "auto" | "manual" | "sandboxed";
+mathVirtualKeyboardPolicy: "auto" | "manual";
 ```
 
 </MemberCard>
@@ -4038,7 +4038,6 @@ optional style: string;
 
 This interface is implemented by:
 - `VirtualKeyboard`: when the browsing context is a top-level document
-- `VirtualKeyboardProxy`: when the browsing context is an iframe
 
 #### Extends
 
@@ -5072,7 +5071,7 @@ type VirtualKeyboardName:
 ### VirtualKeyboardPolicy
 
 ```ts
-type VirtualKeyboardPolicy: "auto" | "manual" | "sandboxed";
+type VirtualKeyboardPolicy: "auto" | "manual";
 ```
 
 - `"auto"`: the virtual keyboard is triggered when a
@@ -6912,8 +6911,6 @@ set static computeEngine(value): void
 `ComputeEngine`
 
 </MemberCard>
-
-
 
 <a id="formassociated" name="formassociated"></a>
 

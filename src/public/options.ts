@@ -308,7 +308,7 @@ export type EditingOptions = {
 
   environmentPopoverPolicy: 'auto' | 'on' | 'off';
 
-  mathVirtualKeyboardPolicy: 'auto' | 'manual' | 'sandboxed';
+  mathVirtualKeyboardPolicy: 'auto' | 'manual'; // | 'sandboxed';
 };
 
 /** @category Options */
