@@ -26,7 +26,6 @@ export type MathLiveGlobal = {
   readAloudCurrentToken: string;
   readAloudFinalToken: null | string;
   readAloudCurrentMark: string;
-  readAloudAudio: HTMLAudioElement;
   readAloudStatus: string;
   readAloudMathfield: any; // _Mathfield;
 };

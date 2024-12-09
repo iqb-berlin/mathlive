@@ -747,7 +747,7 @@ register(
     moveToNextPlaceholder: (model) => leap(model, 'forward'),
     moveToPreviousPlaceholder: (model) => leap(model, 'backward'),
   },
-  { target: 'model', changeSelection: true, audioFeedback: 'return' }
+  { target: 'model', changeSelection: true }
 );
 
 function findSibling(

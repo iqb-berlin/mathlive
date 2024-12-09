@@ -35,8 +35,6 @@ import {
   reparseAllMathfields,
   requestUpdate,
 } from '../editor-mathfield/render';
-import { defaultSpeakHook } from '../editor/speech';
-import { defaultReadAloudHook } from '../editor/speech-read-aloud';
 import type { ComputeEngine } from '@cortex-js/compute-engine';
 
 import { l10n } from '../core/l10n';
@@ -721,10 +719,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
   }
   /** @internal */
   private static _textToSpeechRulesOptions: Record<string, string> = {};
-
-  static speakHook: (text: string) => void = defaultSpeakHook;
-  static readAloudHook: (element: HTMLElement, text: string) => void =
-    defaultReadAloudHook;
 
   /**
    * The locale (language + region) to use for string localization.

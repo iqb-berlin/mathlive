@@ -47,7 +47,6 @@ register(
   },
   {
     target: 'model',
-    audioFeedback: 'delete',
     canUndo: true,
     changeContent: true,
     changeSelection: true,

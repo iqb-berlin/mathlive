@@ -21,7 +21,6 @@ type CommandTarget = 'model' | 'mathfield' | 'virtual-keyboard';
 
 interface CommandOptions {
   target: CommandTarget;
-  audioFeedback?: 'keypress' | 'spacebar' | 'delete' | 'plonk' | 'return';
   canUndo?: boolean;
   changeContent?: boolean; // To update popover
   changeSelection?: boolean; // To update inline shortcut buffer
@@ -40,7 +39,6 @@ export function register(
   options = {
     target: 'mathfield',
     canUndo: false,
-    audioFeedback: undefined,
     changeContent: false,
     changeSelection: false,
     ...(options ?? {}),
@@ -195,7 +193,6 @@ register(
   { complete },
   {
     target: 'mathfield',
-    audioFeedback: 'return',
     canUndo: true,
     changeContent: true,
     changeSelection: true,
@@ -219,7 +216,6 @@ register(
   { nextSuggestion, previousSuggestion },
   {
     target: 'mathfield',
-    audioFeedback: 'keypress',
     changeSelection: true,
   }
 );
