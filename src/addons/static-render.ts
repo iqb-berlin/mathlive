@@ -20,9 +20,6 @@ export type StaticRenderOptionsPrivate = StaticRenderOptions & {
    */
   renderToMathML?: (text: string) => string;
 
-  /** A function that will convert a LaTeX string to speakable text markup. */
-  renderToSpeakableText?: (text: string) => string;
-
   /** A function to convert MathJSON to a LaTeX string */
   serializeToLatex?: (json: unknown) => string;
 
@@ -277,20 +274,6 @@ function createAccessibleMarkupPair(
     const fragment = document.createElement('span');
     if (/\bmathml\b/i.test(accessibleContent) && options.renderToMathML)
       fragment.append(createMathMLNode(latex, options));
-
-    if (
-      /\bspeakable-text\b/i.test(accessibleContent) &&
-      options.renderToSpeakableText
-    ) {
-      const span = document.createElement('span');
-      span.setAttribute('translate', 'no');
-
-      const html = options.renderToSpeakableText(latex);
-      span.innerHTML = globalThis.MathfieldElement.createHTML(html);
-      span.className = 'ML__sr-only';
-      fragment.append(span);
-    }
-
     fragment.append(markupNode);
     return fragment;
   }

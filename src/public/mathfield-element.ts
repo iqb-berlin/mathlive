@@ -298,14 +298,6 @@ const DEPRECATED_OPTIONS = {
   virtualKeyboardToggleGlyph: 'No longer supported',
   virtualKeyboardToolbar: 'mathVirtualKeyboard.editToolbar = ...',
   virtualKeyboards: 'Use `mathVirtualKeyboard.layouts`',
-  speechEngine: '`MathfieldElement.speechEngine`',
-  speechEngineRate: '`MathfieldElement.speechEngineRate`',
-  speechEngineVoice: '`MathfieldElement.speechEngineVoice`',
-  textToSpeechMarkup: '`MathfieldElement.textToSpeechMarkup`',
-  textToSpeechRules: '`MathfieldElement.textToSpeechRules`',
-  textToSpeechRulesOptions: '`MathfieldElement.textToSpeechRulesOptions`',
-  readAloudHook: '`MathfieldElement.readAloudHook`',
-  speakHook: '`MathfieldElement.speakHook`',
   computeEngine: '`MathfieldElement.computeEngine`',
   createHTML: '`MathfieldElement.createHTML`',
   onExport: '`mf.onExport`',
@@ -531,7 +523,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
       'min-font-scale': 'number',
       'max-matrix-cols': 'number',
       'popover-policy': 'string',
-
       'math-mode-space': 'string',
       'read-only': 'boolean',
       'remove-extraneous-parentheses': 'on/off',
@@ -578,118 +569,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
    */
   static createHTML: (html: string) => any = (x) => x;
   // @todo https://github.com/microsoft/TypeScript/issues/30024
-
-  /**
-   * Indicates which speech engine to use for speech output.
-   *
-   * Use `local` to use the OS-specific TTS engine.
-   *
-   * Use `amazon` for Amazon Text-to-Speech cloud API. You must include the
-   * AWS API library and configure it with your API key before use.
-   *
-   * **See**
-   * {@link mathfield/guides/speech/ | Guide: Speech}
-   */
-  static get speechEngine(): 'local' | 'amazon' {
-    return this._speechEngine;
-  }
-  static set speechEngine(value: 'local' | 'amazon') {
-    this._speechEngine = value;
-  }
-  /** @internal */
-  private static _speechEngine: 'local' | 'amazon';
-
-  /**
-   * Sets the speed of the selected voice.
-   *
-   * One of `x-slow`, `slow`, `medium`, `fast`, `x-fast` or a value as a
-   * percentage.
-   *
-   * Range is `20%` to `200%` For example `200%` to indicate a speaking rate
-   * twice the default rate.
-   */
-  static get speechEngineRate(): string {
-    return this._speechEngineRate;
-  }
-  static set speechEngineRate(value: string) {
-    this._speechEngineRate = value;
-  }
-  /** @internal */
-  private static _speechEngineRate = '100%';
-
-  /**
-   * Indicates the voice to use with the speech engine.
-   *
-   * This is dependent on the speech engine. For Amazon Polly, see here:
-   * https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
-   *
-   */
-  static get speechEngineVoice(): string {
-    return this._speechEngineVoice;
-  }
-  static set speechEngineVoice(value: string) {
-    this._speechEngineVoice = value;
-  }
-  /** @internal */
-  private static _speechEngineVoice = 'Joanna';
-
-  /**
-   * The markup syntax to use for the output of conversion to spoken text.
-   *
-   * Possible values are `ssml` for the SSML markup or `mac` for the macOS
-   * markup, i.e. `&#91;&#91;ltr&#93;&#93;`.
-   *
-   */
-  static get textToSpeechMarkup(): '' | 'ssml' | 'ssml_step' | 'mac' {
-    return this._textToSpeechMarkup;
-  }
-  static set textToSpeechMarkup(value: '' | 'ssml' | 'ssml_step' | 'mac') {
-    this._textToSpeechMarkup = value;
-  }
-  /** @internal */
-  private static _textToSpeechMarkup: '' | 'ssml' | 'ssml_step' | 'mac' = '';
-
-  /**
-   * Specify which set of text to speech rules to use.
-   *
-   * A value of `mathlive` indicates that the simple rules built into MathLive
-   * should be used.
-   *
-   * A value of `sre` indicates that the Speech Rule Engine from Volker Sorge
-   * should be used.
-   *
-   * **(Caution)** SRE is not included or loaded by MathLive. For this option to
-   * work SRE should be loaded separately.
-   *
-   * **See**
-   * {@link mathfield/guides/speech/ | Guide: Speech}
-   */
-  static get textToSpeechRules(): 'mathlive' | 'sre' {
-    return this._textToSpeechRules;
-  }
-  static set textToSpeechRules(value: 'mathlive' | 'sre') {
-    this._textToSpeechRules = value;
-  }
-  /** @internal */
-  private static _textToSpeechRules: 'mathlive' | 'sre' = 'mathlive';
-
-  /**
-   * A set of key/value pairs that can be used to configure the speech rule
-   * engine.
-   *
-   * Which options are available depends on the speech rule engine in use.
-   * There are no options available with MathLive's built-in engine. The
-   * options for the SRE engine are documented
-   * {@link https://github.com/zorkow/speech-rule-engine | here}
-   */
-  static get textToSpeechRulesOptions(): Readonly<Record<string, string>> {
-    return this._textToSpeechRulesOptions;
-  }
-  static set textToSpeechRulesOptions(value: Record<string, string>) {
-    this._textToSpeechRulesOptions = value;
-  }
-  /** @internal */
-  private static _textToSpeechRulesOptions: Record<string, string> = {};
 
   /**
    * The locale (language + region) to use for string localization.
@@ -2574,15 +2453,6 @@ mf.macros = {
 function toCamelCase(s: string): string {
   return s.replace(/[^a-zA-Z\d]+(.)/g, (_m, c) => c.toUpperCase());
 }
-
-// Function toKebabCase(s: string): string {
-//     return s
-//         .match(
-//             /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
-//         )
-//         .map((x: string) => x.toLowerCase())
-//         .join('-');
-// }
 
 function getOptionsFromAttributes(
   mfe: MathfieldElement

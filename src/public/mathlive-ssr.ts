@@ -20,7 +20,6 @@ import { toMathML } from '../formats/atom-to-math-ml';
 import { Box, coalesce, makeStruts } from '../core/box';
 import { Context } from '../core/context';
 import { parseLatex } from '../core/parser';
-import { atomToSpeakableText } from '../formats/atom-to-speakable-text';
 import { Expression } from './core-types';
 import { validateLatex as validateLatexInternal } from '../core/parser';
 
@@ -169,28 +168,6 @@ export function convertLatexToMathMl(
   );
 }
 
-/**
- * Convert a LaTeX string to a textual representation ready to be spoken
- *
- * @param latex A string of valid LaTeX. It does not have to start
- * with a mode token such as a `$$` or `\(`.
- *
- * @return The spoken representation of the input LaTeX.
- * @example
- * console.log(convertLatexToSpeakableText('\\frac{1}{2}'));
- * // 'half'
- * @category Conversion
- * @keywords convert, latex, speech, speakable, text, speakable text
- */
-export function convertLatexToSpeakableText(latex: string): string {
-  const atoms = parseLatex(latex, {
-    parseMode: 'math',
-    mathstyle: 'displaystyle',
-  });
-
-  return atomToSpeakableText(atoms);
-}
-
 let gComputeEngine: ComputeEngine;
 
 /**
@@ -211,9 +188,9 @@ export function convertMathJsonToLatex(json: Expression): string {
     else {
       console.error(
         `MathLive {{SDK_VERSION}}: The CortexJS Compute Engine library is not available.
-        
+
         Load the library, for example with:
-        
+
         import "https://unpkg.com/@cortex-js/compute-engine?module"`
       );
     }

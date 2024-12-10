@@ -124,37 +124,10 @@ to map items on the screen with their MathML representation or vice-versa.
 
 </MemberCard>
 
-<a id="convertlatextospeakabletext" name="convertlatextospeakabletext"></a>
-
-<MemberCard>
-
-### convertLatexToSpeakableText()
-
-```ts
-function convertLatexToSpeakableText(latex): string
-```
-
-Convert a LaTeX string to a textual representation ready to be spoken
-
-• **latex**: `string`
-
-A string of valid LaTeX. It does not have to start
-with a mode token such as a `$$` or `\(`.
-
-`string`
-
-The spoken representation of the input LaTeX.
-
-#### Example
-
-```ts
-console.log(convertLatexToSpeakableText('\\frac{1}{2}'));
-// 'half'
-```
 
 #### Keywords
 
-convert, latex, speech, speakable, text, speakable text
+convert, latex,text
 
 </MemberCard>
 
@@ -696,52 +669,9 @@ from the virtual keyboard
 
 </MemberCard>
 
-<a id="plonk" name="plonk"></a>
 
-<MemberCard>
-
-##### Commands.plonk()
-
-```ts
-plonk: (mathfield) => boolean;
-```
 
 • **mathfield**: `Mathfield`
-
-`boolean`
-
-</MemberCard>
-
-<a id="speak" name="speak"></a>
-
-<MemberCard>
-
-##### Commands.speak()
-
-```ts
-speak: (mathfield, scope, options) => boolean;
-```
-
-• **mathfield**: `Mathfield`
-
-• **scope**: [`SpeechScope`](#speechscope)
-
-How much of the formula should be spoken:
-| | |
-|---:|:---|
-| `all` | the entire formula |
-| `selection` | the selection portion of the formula |
-| `left` | the element to the left of the selection |
-| `right` | the element to the right of the selection |
-| `group` | the group (numerator, root, etc..) the selection is in |
-| `parent` | the parent of the selection |
-
-• **options**
-
-• **options.withHighlighting**: `boolean`
-
-In addition to speaking the requested portion of the formula,
-visually highlight it as it is read (read aloud functionality)
 
 `boolean`
 
@@ -3147,10 +3077,6 @@ type OutputFormat:
   | "math-json"
   | "math-ml"
   | "plain-text"
-  | "spoken"
-  | "spoken-text"
-  | "spoken-ssml"
-  | "spoken-ssml-with-highlighting";
 ```
 
 | Format                | Description             |

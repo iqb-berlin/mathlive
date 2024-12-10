@@ -13,7 +13,6 @@ import './virtual-keyboard/commands';
 import {
   convertLatexToMarkup,
   convertLatexToMathMl,
-  convertLatexToSpeakableText,
   convertMathJsonToLatex,
 } from './public/mathlive-ssr';
 
@@ -113,7 +112,6 @@ export function renderMathInElement(
   const optionsPrivate: StaticRenderOptionsPrivate = options ?? {};
   optionsPrivate.renderToMarkup ??= convertLatexToMarkup;
   optionsPrivate.renderToMathML ??= convertLatexToMathMl;
-  optionsPrivate.renderToSpeakableText ??= convertLatexToSpeakableText;
   optionsPrivate.serializeToLatex ??= convertMathJsonToLatex;
   _renderMathInElement(el, optionsPrivate);
 }
