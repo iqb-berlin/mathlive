@@ -257,15 +257,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     });
 
     this.listeners = {};
-
-    try {
-      window.top?.addEventListener('message', this);
-    } catch (e) {
-      // We are in an iframe and the parent document is not accessible
-      // (different domains)
-      window.addEventListener('message', this);
-    }
-
+    window.addEventListener('message', this);
     // Listen for when a mathfield gets focused, and show
     // the virtual keyboard if needed
     document.addEventListener('focusin', (event: FocusEvent) => {
@@ -626,9 +618,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
 
       // Avoid an infinite messages loop if within one window
       const commandTarget = getCommandTarget(command!);
-      if (window.top !== undefined && commandTarget !== 'virtual-keyboard')
-        return;
-
+      if (commandTarget !== 'virtual-keyboard') return;
       this.executeCommand(command!);
       return;
     }
@@ -647,13 +637,6 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     }
 
     if (action === 'disconnect') return;
-
-    // If the mathVirtualKeyboardPolicy was set to `sandboxed`,
-    // we can be a VirtualKeyboard instance (not a proxy) inside a non-top-level
-    // browsing context. If that's the case, safely ignored messages that could
-    // be dispatched from other mathfields, as we will only respond to
-    // direct invocation via function dispatching on the VK instance.
-    if (window !== window.top) return;
 
     if (action === 'show') {
       if (typeof msg.animate !== 'undefined')
@@ -762,7 +745,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
   }
 
   stateWillChange(visible: boolean): boolean {
-    const success = this.dispatchEvent(
+    return this.dispatchEvent(
       new CustomEvent('before-virtual-keyboard-toggle', {
         detail: { visible },
         bubbles: true,
@@ -770,7 +753,6 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
         composed: true,
       })
     );
-    return success;
   }
 
   stateChanged(): void {

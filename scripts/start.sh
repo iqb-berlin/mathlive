@@ -34,9 +34,8 @@ rm -rf ./coverage
 mkdir -p dist
 
 # Copy static assets
-printf "${LINECLEAR}${DOT} Copying static assets (fonts, sounds)"
+printf "${LINECLEAR}${DOT} Copying static assets (fonts)"
 cp -f -R css/fonts dist/
-cp -f -R sounds dist/
 echo -e "${LINECLEAR}"
 
 # Build CSS

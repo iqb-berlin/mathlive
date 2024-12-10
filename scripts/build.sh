@@ -66,9 +66,8 @@ rm -rf ./declarations
 echo -e "$LINECLEAR$BASENAME$CHECK${DIM}TypeScript declaration files built${RESET}"
 
 # Copy static assets
-printf "$BASENAME${DOT}Copying static assets (fonts, sounds)"
+printf "$BASENAME${DOT}Copying static assets (fonts)"
 cp -f -R css/fonts dist/
-cp -f -R sounds dist/
 echo -e "$LINECLEAR$BASENAME$CHECK${DIM}Static assets copied${RESET}"
 
 

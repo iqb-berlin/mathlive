@@ -41,7 +41,7 @@ context({
     .then(({ host, port }) => {
       if (host === '0.0.0.0') host = 'localhost';
       console.log(
-        ` 🚀 Server ready \u001b[1;35m http://${host}:${port}/dist/smoke/\u001b[0m`
+        ` 🚀 Server ready \u001b[1;35m http://${host}:${port}/dist/virtual-keyboard/\u001b[0m`
       );
     })
 );

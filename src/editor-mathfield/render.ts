@@ -10,7 +10,7 @@ import {
 import type { _Mathfield } from './mathfield-private';
 
 import { updateSuggestionPopoverPosition } from '../editor/suggestion-popover';
-import { gFontsState } from '../core/fonts';
+
 import { Context } from '../core/context';
 import { Atom } from '../core/atom-class';
 import { applyInterBoxSpacing } from '../core/inter-box-spacing';
@@ -242,9 +242,7 @@ export function renderSelection(
     element.remove();
 
   if (
-    !(interactive ?? false) &&
-    gFontsState !== 'error' &&
-    gFontsState !== 'ready'
+    !(interactive ?? false)
   ) {
     // If the fonts are not loaded, or if they are still loading, schedule
     // a re-render of the selection to a bit later. If after waiting a bit
@@ -253,8 +251,7 @@ export function renderSelection(
     // being different after font-substitution, which may affect rendering of
     // the selection
     setTimeout(() => {
-      if (gFontsState === 'ready') renderSelection(mathfield);
-      else setTimeout(() => renderSelection(mathfield), 128);
+      renderSelection(mathfield);
     }, 32);
     return;
   }

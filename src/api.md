@@ -124,37 +124,10 @@ to map items on the screen with their MathML representation or vice-versa.
 
 </MemberCard>
 
-<a id="convertlatextospeakabletext" name="convertlatextospeakabletext"></a>
-
-<MemberCard>
-
-### convertLatexToSpeakableText()
-
-```ts
-function convertLatexToSpeakableText(latex): string
-```
-
-Convert a LaTeX string to a textual representation ready to be spoken
-
-• **latex**: `string`
-
-A string of valid LaTeX. It does not have to start
-with a mode token such as a `$$` or `\(`.
-
-`string`
-
-The spoken representation of the input LaTeX.
-
-#### Example
-
-```ts
-console.log(convertLatexToSpeakableText('\\frac{1}{2}'));
-// 'half'
-```
 
 #### Keywords
 
-convert, latex, speech, speakable, text, speakable text
+convert, latex,text
 
 </MemberCard>
 
@@ -198,7 +171,7 @@ mf.executeCommand('copyToClipboard');
 Some commands require an argument, for example to insert a character:
 
 ```ts
-mf.executeCommand('insert("x")' });
+mf.executeCommand('insert("x")');
 ```
 
 The argument can be specified in parentheses after the command name, or
@@ -696,52 +669,9 @@ from the virtual keyboard
 
 </MemberCard>
 
-<a id="plonk" name="plonk"></a>
 
-<MemberCard>
-
-##### Commands.plonk()
-
-```ts
-plonk: (mathfield) => boolean;
-```
 
 • **mathfield**: `Mathfield`
-
-`boolean`
-
-</MemberCard>
-
-<a id="speak" name="speak"></a>
-
-<MemberCard>
-
-##### Commands.speak()
-
-```ts
-speak: (mathfield, scope, options) => boolean;
-```
-
-• **mathfield**: `Mathfield`
-
-• **scope**: [`SpeechScope`](#speechscope)
-
-How much of the formula should be spoken:
-| | |
-|---:|:---|
-| `all` | the entire formula |
-| `selection` | the selection portion of the formula |
-| `left` | the element to the left of the selection |
-| `right` | the element to the right of the selection |
-| `group` | the group (numerator, root, etc..) the selection is in |
-| `parent` | the parent of the selection |
-
-• **options**
-
-• **options.withHighlighting**: `boolean`
-
-In addition to speaking the requested portion of the formula,
-visually highlight it as it is read (read aloud functionality)
 
 `boolean`
 
@@ -810,10 +740,6 @@ typedText: (text, options) => boolean;
 • **text**: `string`
 
 • **options**
-
-• **options.feedback**: `boolean`
-
-If true, provide audio and haptic feedback
 
 • **options.focus**: `boolean`
 
@@ -1908,7 +1834,7 @@ mathModeSpace: string;
 ##### EditingOptions.mathVirtualKeyboardPolicy
 
 ```ts
-mathVirtualKeyboardPolicy: "auto" | "manual" | "sandboxed";
+mathVirtualKeyboardPolicy: "auto" | "manual";
 ```
 
 </MemberCard>
@@ -2904,20 +2830,6 @@ type InsertOptions: object;
 
 #### Type declaration
 
-<a id="feedback" name="feedback"></a>
-
-<MemberCard>
-
-##### InsertOptions.feedback?
-
-```ts
-optional feedback: boolean;
-```
-
-If `true`, provide audio and haptic feedback
-
-</MemberCard>
-
 <a id="focus-1" name="focus-1"></a>
 
 <MemberCard>
@@ -3165,10 +3077,6 @@ type OutputFormat:
   | "math-json"
   | "math-ml"
   | "plain-text"
-  | "spoken"
-  | "spoken-text"
-  | "spoken-ssml"
-  | "spoken-ssml-with-highlighting";
 ```
 
 | Format                | Description             |
@@ -4038,7 +3946,6 @@ optional style: string;
 
 This interface is implemented by:
 - `VirtualKeyboard`: when the browsing context is a top-level document
-- `VirtualKeyboardProxy`: when the browsing context is an iframe
 
 #### Extends
 
@@ -5072,7 +4979,7 @@ type VirtualKeyboardName:
 ### VirtualKeyboardPolicy
 
 ```ts
-type VirtualKeyboardPolicy: "auto" | "manual" | "sandboxed";
+type VirtualKeyboardPolicy: "auto" | "manual";
 ```
 
 - `"auto"`: the virtual keyboard is triggered when a
@@ -5814,6 +5721,68 @@ set macros(value): void
 </MemberCard>
 
 #### Customization
+Control the letter shape style:
+
+| `letterShapeStyle` | xyz | ABC | αβɣ | ΓΔΘ |
+| ------------------ | --- | --- | --- | --- |
+| `iso`              | it  | it  | it  | it  |
+| `tex`              | it  | it  | it  | up  |
+| `french`           | it  | up  | up  | up  |
+| `upright`          | up  | up  | up  | up  |
+
+(it) = italic (up) = upright
+
+The default letter shape style is `auto`, which indicates that `french`
+should be used if the locale is "french", and `tex` otherwise.
+
+**Historical Note**
+
+Where do the "french" rules come from? The
+TeX standard font, Computer Modern, is based on Monotype 155M, itself
+based on the Porson greek font which was one of the most widely used
+Greek fonts in english-speaking countries. This font had upright
+capitals, but slanted lowercase. In France, the traditional font for
+greek was Didot, which has both upright capitals and lowercase.
+
+As for roman uppercase, they are recommended by "Lexique des règles
+typographiques en usage à l’Imprimerie Nationale". It should be noted
+that this convention is not universally followed.
+
+<a id="lettershapestyle" name="lettershapestyle"></a>
+
+<MemberCard>
+
+##### MathfieldElement.letterShapeStyle
+
+```ts
+get letterShapeStyle(): 
+  | "auto"
+  | "tex"
+  | "iso"
+  | "french"
+  | "upright"
+```
+
+```ts
+set letterShapeStyle(value): void
+```
+
+• **value**: 
+  \| `"auto"`
+  \| `"tex"`
+  \| `"iso"`
+  \| `"french"`
+  \| `"upright"`
+
+  \| `"auto"`
+  \| `"tex"`
+  \| `"iso"`
+  \| `"french"`
+  \| `"upright"`
+
+</MemberCard>
+
+#### Customization
 If `"auto"` a popover with commands to edit an environment (matrix)
 is displayed when the virtual keyboard is displayed.
 
@@ -6254,68 +6223,6 @@ set smartMode(value): void
 • **value**: `boolean`
 
 `boolean`
-
-</MemberCard>
-
-#### Customization 
-Control the letter shape style:
-
-| `letterShapeStyle` | xyz | ABC | αβɣ | ΓΔΘ |
-| ------------------ | --- | --- | --- | --- |
-| `iso`              | it  | it  | it  | it  |
-| `tex`              | it  | it  | it  | up  |
-| `french`           | it  | up  | up  | up  |
-| `upright`          | up  | up  | up  | up  |
-
-(it) = italic (up) = upright
-
-The default letter shape style is `auto`, which indicates that `french`
-should be used if the locale is "french", and `tex` otherwise.
-
-**Historical Note**
-
-Where do the "french" rules come from? The
-TeX standard font, Computer Modern, is based on Monotype 155M, itself
-based on the Porson greek font which was one of the most widely used
-Greek fonts in english-speaking countries. This font had upright
-capitals, but slanted lowercase. In France, the traditional font for
-greek was Didot, which has both upright capitals and lowercase.
-
-As for roman uppercase, they are recommended by "Lexique des règles
-typographiques en usage à l’Imprimerie Nationale". It should be noted
-that this convention is not universally followed.
-
-<a id="lettershapestyle" name="lettershapestyle"></a>
-
-<MemberCard>
-
-##### MathfieldElement.letterShapeStyle
-
-```ts
-get letterShapeStyle(): 
-  | "auto"
-  | "tex"
-  | "iso"
-  | "french"
-  | "upright"
-```
-
-```ts
-set letterShapeStyle(value): void
-```
-
-• **value**: 
-  \| `"auto"`
-  \| `"tex"`
-  \| `"iso"`
-  \| `"french"`
-  \| `"upright"`
-
-  \| `"auto"`
-  \| `"tex"`
-  \| `"iso"`
-  \| `"french"`
-  \| `"upright"`
 
 </MemberCard>
 
@@ -6913,62 +6820,6 @@ set static computeEngine(value): void
 
 </MemberCard>
 
-<a id="fontsdirectory" name="fontsdirectory"></a>
-
-<MemberCard>
-
-##### MathfieldElement.fontsDirectory
-
-```ts
-get static fontsDirectory(): string
-```
-
-A URL fragment pointing to the directory containing the fonts
-necessary to render a formula.
-
-These fonts are available in the `/dist/fonts` directory of the SDK.
-
-Customize this value to reflect where you have copied these fonts,
-or to use the CDN version.
-
-The default value is `"./fonts"`. Use `null` to prevent
-any fonts from being loaded.
-
-Changing this setting after the mathfield has been created will have
-no effect.
-
-```javascript
-{
-     // Use the CDN version
-     fontsDirectory: ''
-}
-```
-
-```javascript
-{
-     // Use a directory called "fonts", located next to the
-     // `mathlive.js` (or `mathlive.mjs`) file.
-     fontsDirectory: './fonts'
-}
-```
-
-```javascript
-{
-     // Use a directory located at the root of your website
-     fontsDirectory: 'https://example.com/fonts'
-}
-```
-
-```ts
-set static fontsDirectory(value): void
-```
-
-• **value**: `string`
-
-`string`
-
-</MemberCard>
-
 <a id="formassociated" name="formassociated"></a>
 
 <MemberCard>
@@ -7004,33 +6855,6 @@ set static isFunction(value): void
 • **command**: `string`
 
 `boolean`
-
-</MemberCard>
-
-<a id="plonksound" name="plonksound"></a>
-
-<MemberCard>
-
-##### MathfieldElement.plonkSound
-
-```ts
-get static plonkSound(): string
-```
-
-Sound played to provide feedback when a command has no effect, for example
-when pressing the spacebar at the root level.
-
-The property is either:
-- a string, the name of an audio file in the `soundsDirectory` directory
-- null to turn off the sound
-
-```ts
-set static plonkSound(value): void
-```
-
-• **value**: `string`
-
-`string`
 
 </MemberCard>
 
@@ -7260,27 +7084,6 @@ showMenu(_): boolean
 
 </MemberCard>
 
-<a id="loadsound" name="loadsound"></a>
-
-<MemberCard>
-
-##### MathfieldElement.loadSound()
-
-```ts
-static loadSound(sound): Promise<void>
-```
-
-• **sound**: 
-  \| `"keypress"`
-  \| `"plonk"`
-  \| `"delete"`
-  \| `"spacebar"`
-  \| `"return"`
-
-`Promise`\<`void`\>
-
-</MemberCard>
-
 <a id="openurl" name="openurl"></a>
 
 <MemberCard>
@@ -7294,27 +7097,6 @@ static openUrl(href): void
 • **href**: `string`
 
 `void`
-
-</MemberCard>
-
-<a id="playsound" name="playsound"></a>
-
-<MemberCard>
-
-##### MathfieldElement.playSound()
-
-```ts
-static playSound(name): Promise<void>
-```
-
-• **name**: 
-  \| `"keypress"`
-  \| `"plonk"`
-  \| `"delete"`
-  \| `"spacebar"`
-  \| `"return"`
-
-`Promise`\<`void`\>
 
 </MemberCard>
 
@@ -7667,109 +7449,6 @@ set virtualKeyboardTargetOrigin(value): void
 
 </MemberCard>
 
-<a id="keypresssound" name="keypresssound"></a>
-
-<MemberCard>
-
-##### MathfieldElement.keypressSound
-
-```ts
-get static keypressSound(): Readonly<object>
-```
-
-When a key on the virtual keyboard is pressed, produce a short audio
-feedback.
-
-If the property is set to a `string`, the same sound is played in all
-cases. Otherwise, a distinct sound is played:
-
--   `delete` a sound played when the delete key is pressed
--   `return` ... when the return/tab key is pressed
--   `spacebar` ... when the spacebar is pressed
--   `default` ... when any other key is pressed. This property is required,
-    the others are optional. If they are missing, this sound is played as
-    well.
-
-The value of the properties should be either a string, the name of an
-audio file in the `soundsDirectory` directory or `null` to suppress the sound.
-
-```ts
-set static keypressSound(value): void
-```
-
-• **value**: `string` \| `object`
-
-`Readonly`\<`object`\>
-
-<MemberCard>
-
-###### keypressSound.default
-
-```ts
-default: string;
-```
-
-</MemberCard>
-
-<MemberCard>
-
-###### keypressSound.delete
-
-```ts
-delete: string;
-```
-
-</MemberCard>
-
-<MemberCard>
-
-###### keypressSound.return
-
-```ts
-return: string;
-```
-
-</MemberCard>
-
-<MemberCard>
-
-###### keypressSound.spacebar
-
-```ts
-spacebar: string;
-```
-
-</MemberCard>
-
-</MemberCard>
-
-<a id="soundsdirectory" name="soundsdirectory"></a>
-
-<MemberCard>
-
-##### MathfieldElement.soundsDirectory
-
-```ts
-get static soundsDirectory(): string
-```
-
-A URL fragment pointing to the directory containing the optional
-sounds used to provide feedback while typing.
-
-Some default sounds are available in the `/dist/sounds` directory of the SDK.
-
-Use `null` to prevent any sound from being loaded.
-
-```ts
-set static soundsDirectory(value): void
-```
-
-• **value**: `string`
-
-`string`
-
-</MemberCard>
-
 <a id="mathfieldelementattributes" name="mathfieldelementattributes"></a>
 
 ### MathfieldElementAttributes
@@ -8097,7 +7776,6 @@ This event provides an opportunity to handle this situation, for example
 by focusing an element adjacent to the mathfield.
 
 If the event is canceled (i.e. `evt.preventDefault()` is called inside your
-event handler), the default behavior is to play a "plonk" sound.
 
 #### Type declaration
 

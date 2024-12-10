@@ -73,6 +73,5 @@ export const DVORAK: KeyboardLayout = {
     NumpadDecimal: ['.', '.', '.', '.'],
     IntlBackslash: ['§', '±', '§', '±'],
     NumpadEqual: ['=', '=', '=', '='],
-    AudioVolumeUp: ['', '=', '', '='],
   },
 };

@@ -242,15 +242,6 @@ export const DEFAULT_KEYBINDINGS: Keybinding[] = [
   //      "^@\UF703" = "noop:";
   //  }
 
-  {
-    key: 'alt+ctrl+[ArrowUp]',
-    command: ['speak', 'all', { withHighlighting: false }],
-  },
-  {
-    key: 'alt+ctrl+[ArrowDown]',
-    command: ['speak', 'selection', { withHighlighting: false }],
-  },
-
   //
   // Punctuations and some non-alpha key combinations
   // only work with specific keyboard layouts

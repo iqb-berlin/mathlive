@@ -6,10 +6,131 @@
   <title>Virtual Keyboard Test</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link rel="stylesheet" href="../style.css" />
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_AMS-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Caligraphic-Bold.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Caligraphic-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Fraktur-Bold.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Fraktur-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Main-BoldItalic.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Main-Bold.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Main-Italic.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Main-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Math-BoldItalic.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Math-Italic.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_SansSerif-Bold.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_SansSerif-Italic.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_SansSerif-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Script-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Size1-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Size2-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Size3-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Size4-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+<!--  <link-->
+<!--    rel="preload"-->
+<!--    href="../fonts/KaTeX_Typewriter-Regular.woff2"-->
+<!--    as="font"-->
+<!--    crossorigin-->
+<!--  />-->
+  <link rel="stylesheet" href="../mathlive-fonts.css" />
   <link rel="icon" href="data:," />
   <style>
     body {
-      /* --keyboard-background: linear-gradient(#e66465, #9198e5); 
+      /* --keyboard-background: linear-gradient(#e66465, #9198e5);
          --keyboard-background: linear-gradient(white, #cacfd7); */
       /* --box-placeholder-color: red; */
       /* --keycap-height: 24px;
@@ -192,111 +313,6 @@
       updateButtons();
     }
 
-    // mathVirtualKeyboard.layouts = {
-    //     rows: [
-    //       [
-    //         'a',
-    //         'b',
-    //         { class: 'separator w5' },
-    //         '7',
-    //         '8',
-    //         '9',
-    //         '\\div',
-    //         { class: 'separator w5' },
-    //         {
-    //           class: 'tex',
-    //           label: '<span><i>x</i>&thinsp;²</span>',
-    //           insert: '$$#@^{2}$$',
-    //         },
-    //         {
-    //           class: 'tex',
-    //           label: '<span><i>x</i><sup>&thinsp;<i>n</i></sup></span>',
-    //           insert: '$$#@^{}$$',
-    //         },
-    //         {
-    //           class: 'small',
-    //           latex: '\\sqrt{#0}',
-    //           insert: '$$\\sqrt{#0}$$',
-    //         },
-    //       ],
-    //       [
-    //         'c',
-    //         'd',
-    //         { class: 'separator w5' },
-    //         '4',
-    //         '5',
-    //         '6',
-    //         '\\times',
-    //         { class: 'separator w5' },
-    //         '\\frac{#0}{#0}',
-    //         { class: 'separator' },
-    //         { class: 'separator' },
-    //       ],
-    //       [
-    //         'x',
-    //         'y',
-    //         { class: 'separator w5' },
-
-    //         '1',
-    //         '2',
-    //         '3',
-    //         '-',
-    //         { class: 'separator w5' },
-    //         { class: 'separator' },
-    //         { class: 'separator' },
-    //         { class: 'separator' },
-    //       ],
-    //       [
-    //         '(',
-    //         ')',
-
-    //         { class: 'separator w5' },
-    //         '0',
-    //         '.',
-    //         '\\pi',
-    //         '+',
-    //         { class: 'separator w5' },
-    //         {
-    //           class: 'action',
-    //           label:
-    //             "<svg class=svg-glyph><use xlink:href='#svg-arrow-left' /></svg>",
-    //           command: ['performWithFeedback', 'moveToPreviousChar'],
-    //         },
-    //         {
-    //           class: 'action',
-    //           label:
-    //             "<svg class=svg-glyph><use xlink:href='#svg-arrow-right' /></svg>",
-    //           command: ['performWithFeedback', 'moveToNextChar'],
-    //         },
-    //         {
-    //           class: 'action font-glyph right',
-    //           label: '&#x232b;',
-    //           command: ['performWithFeedback', 'deleteBackward'],
-    //         },
-    //       ],
-    // };
-
-    // mathVirtualKeyboard.layouts = [
-    //   {
-    //     label: 'Minimal', // Label displayed in the Layout Switcher
-    //     tooltip: 'Only the essentials!',
-    //     rows: [
-    //       [
-    //         '+',
-    //         '-',
-    //         '\\times',
-    //         '\\frac{#@}{#?}',
-    //         '=',
-    //         '.',
-    //         '(',
-    //         ')',
-    //         '\\sqrt{#0}',
-    //         '#@^{#?}',
-    //       ],
-    //       ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-    //     ],
-    //   },
-    // ];
 
     function makeVirtualKeyboard() {
       const abcLayout = mathVirtualKeyboard.normalizedLayouts.find(x => x.label === 'abc');
@@ -331,162 +347,6 @@
         return key;
       }));
       return abcLayout;
-
-
-      // const extraSpecificity = `.ML__keyboard .minimalist-backdrop`;
-      // const customKeys = symbolsToKeycaps(variables);
-      // const extraSpecificity = "";
-      // return {
-      //   label: "",
-      //   layers: [
-      //     {
-      //       // style: `
-      //       //         .ML__keyboard {
-      //       //           --keyboard-zindex: 2000;
-
-      //       //         }
-      //       //         .minimalist-backdrop {
-      //       //           display: flex;
-      //       //           justify-content: center;
-      //       //         }
-      //       //         ${extraSpecificity} .minimalist-container {
-      //       //           --keycap-height: 45px;
-      //       //           --keycap-max-width: 53px;
-      //       //           --keycap-font-size: 20px;
-      //       //           --keycap-small-font-size: 12px;
-      //       //           --keyboard-background: #f2f2f2;
-      //       //           --keycap-background-hover: #ffffff;
-
-      //       //           --keycap-secondary-background: #e5e5e5;
-      //       //           --keycap-secondary-background-hover: #c4c4c4;
-
-      //       //           --placeholder-opacity: 1;
-
-      //       //           padding: 15px;
-
-      //       //           background: var(--keyboard-background);
-      //       //           border-top-left-radius: 8px;
-      //       //           border-top-right-radius: 8px;
-      //       //           border: none;
-      //       //           box-shadow: 0px 0px 40px 0px #00000033;
-
-      //       //         }
-
-      //       //         @container (max-width: 744px) {
-      //       //           ${extraSpecificity} .minimalist-container {
-      //       //             padding: 4px;
-      //       //           }
-
-      //       //           ${extraSpecificity} .MLK__rows {
-      //       //             --keycap-gap: 5px;
-      //       //             --keycap-height: 45px;
-      //       //           }
-      //       //         }
-
-      //       //         ${extraSpecificity} .minimalist-container .action {
-      //       //           box-shadow: 0px 1px 0px #b5b5b5;
-      //       //           color: var(--keycap-text);
-      //       //           border: none;
-      //       //         }
-
-      //       //         ${extraSpecificity} .minimalist-container .action.is-pressed {
-      //       //           transform-origin: bottom center;
-      //       //           transform: scale(1.4, 1.4);
-      //       //           background-color: var(--keycap-secondary-background-hover);
-      //       //           color: var(--keycap-text);
-      //       //         }
-
-      //       //         ${extraSpecificity} .minimalist-container .action.is-active {
-      //       //           background-color: var(--keycap-secondary-background-hover);
-      //       //           color: var(--keycap-text);
-      //       //         }
-
-      //       //         ${extraSpecificity} .minimalist-container .MLK__keycap:not(.ghost) {
-      //       //           box-shadow: 0px 1px 0px #b5b5b5;
-      //       //           color: var(--keycap-text);
-      //       //           border: none;
-      //       //         }
-
-      //       //         ${extraSpecificity} .minimalist-container .MLK__keycap.is-pressed {
-      //       //           transform-origin: bottom center;
-      //       //           transform: scale(1.4, 1.4);
-      //       //           background-color: var(--keycap-background-hover);
-      //       //           color: var(--keycap-text);
-      //       //         }
-
-      //       //         // ${extraSpecificity} .minimalist-container .MLK__keycap.is-active {
-      //       //         //   background-color: var(--keycap-background-hover);
-      //       //         //   color: var(--keycap-text);
-      //       //         // }
-
-      //       //         ${extraSpecificity} .MLK__rows {
-      //       //           overflow-x: unset;
-      //       //         }
-
-      //       //         // ${extraSpecificity} .MLK__rows .row {
-      //       //         //   justify-content: flex-start;
-      //       //         // }
-
-      //       //         // ${extraSpecificity} .if-can-undo, ${extraSpecificity} .if-can-redo {
-      //       //         //   opacity: 0.4;
-      //       //         // }
-
-      //       //         // .ML__keyboard.can-undo .if-can-undo, .ML__keyboard.can-redo .if-can-redo {
-      //       //         //   opacity: 1;
-      //       //         // }
-      //       //       `,
-      //       // backdrop: "minimalist-backdrop",
-      //       // container: "minimalist-container",
-      //       rows: [
-      //         // customKeys,
-      //         // customKeys.length > 0 ? ['[hr]'] : [],
-      //         [
-      //           {
-      //             label: "text",
-      //             class: "if-math-mode",
-      //             command: ["performWithFeedback", ["switchMode", "text"]],
-      //           },
-      //           {
-      //             label: "math",
-      //             class: "if-text-mode",
-      //             command: ["performWithFeedback", ["switchMode", "math"]],
-      //           },
-      //           "+",
-      //           "-",
-      //           {
-      //             latex: "\\times",
-      //             tooltip: "This is a multiplication sign",
-      //             shift: { latex: "\\ast", tooltip: "This is a star" },
-      //           },
-      //           {
-      //             insert: "\\frac{#@}{#0}",
-      //             latex: "\\frac{#?}{#?}",
-      //             class: "small",
-      //           },
-      //           "=",
-      //           "[.]",
-      //           "(",
-      //           ")",
-      //           { latex: "\\sqrt{#0}", class: "small" },
-      //           { insert: "#@^{#?}", class: "small", latex: "#?^{#?}" },
-      //         ],
-      //         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-      //         ["[hr]"],
-      //         [
-      //           { label: "[undo]" },
-      //           "[redo]",
-      //           "[separator]",
-      //           "[separator]",
-      //           "[separator]",
-      //           { label: "[separator]", width: 1.5 },
-      //           "[left]",
-      //           "[right]",
-      //           { label: "[backspace]", class: "action hide-shift" },
-      //         ],
-      //       ],
-      //     },
-      //   ],
-      // };
     }
 
     function updateButtons() {

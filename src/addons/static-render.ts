@@ -2,7 +2,7 @@
 
 import type { LayoutOptions, StaticRenderOptions } from '../public/options';
 import { injectStylesheet } from '../common/stylesheet';
-import { loadFonts } from '../core/fonts';
+
 import { parseMathString } from '../formats/parse-math-string';
 
 import '../core/atom';
@@ -19,9 +19,6 @@ export type StaticRenderOptionsPrivate = StaticRenderOptions & {
    * MathML markup.
    */
   renderToMathML?: (text: string) => string;
-
-  /** A function that will convert a LaTeX string to speakable text markup. */
-  renderToSpeakableText?: (text: string) => string;
 
   /** A function to convert MathJSON to a LaTeX string */
   serializeToLatex?: (json: unknown) => string;
@@ -277,20 +274,6 @@ function createAccessibleMarkupPair(
     const fragment = document.createElement('span');
     if (/\bmathml\b/i.test(accessibleContent) && options.renderToMathML)
       fragment.append(createMathMLNode(latex, options));
-
-    if (
-      /\bspeakable-text\b/i.test(accessibleContent) &&
-      options.renderToSpeakableText
-    ) {
-      const span = document.createElement('span');
-      span.setAttribute('translate', 'no');
-
-      const html = options.renderToSpeakableText(latex);
-      span.innerHTML = globalThis.MathfieldElement.createHTML(html);
-      span.className = 'ML__sr-only';
-      fragment.append(span);
-    }
-
     fragment.append(markupNode);
     return fragment;
   }
@@ -514,6 +497,7 @@ export function _renderMathInElement(
   options?: StaticRenderOptions
 ): void {
   try {
+    console.log('_renderMathInElement');
     const optionsPrivate: StaticRenderOptionsPrivate = {
       ...DEFAULT_AUTO_RENDER_OPTIONS,
       ...options,
@@ -546,7 +530,6 @@ export function _renderMathInElement(
     // Load the fonts and inject the stylesheet once to
     // avoid having to do it many times in the case of a `renderMathInDocument()`
     // call.
-    void loadFonts();
     injectStylesheet('core');
 
     scanElement(element, optionsPrivate);

@@ -1,7 +1,5 @@
 import { isArray } from '../common/types';
-
 import { SelectorPrivate, CommandRegistry } from './types';
-
 import type { _Mathfield } from '../editor-mathfield/mathfield-private';
 import { requestUpdate } from '../editor-mathfield/render';
 import {
@@ -9,19 +7,13 @@ import {
   complete,
   removeSuggestion,
 } from '../editor-mathfield/autocomplete';
-import { canVibrate } from '../ui/utils/capabilities';
-import MathfieldElement from '../public/mathfield-element';
 
 export { SelectorPrivate };
-
-// @revisit: move to mathfield.vibrate()
-export const HAPTIC_FEEDBACK_DURATION = 3; // In ms
 
 type CommandTarget = 'model' | 'mathfield' | 'virtual-keyboard';
 
 interface CommandOptions {
   target: CommandTarget;
-  audioFeedback?: 'keypress' | 'spacebar' | 'delete' | 'plonk' | 'return';
   canUndo?: boolean;
   changeContent?: boolean; // To update popover
   changeSelection?: boolean; // To update inline shortcut buffer
@@ -40,7 +32,6 @@ export function register(
   options = {
     target: 'mathfield',
     canUndo: false,
-    audioFeedback: undefined,
     changeContent: false,
     changeSelection: false,
     ...(options ?? {}),
@@ -153,7 +144,6 @@ export function perform(
 /**
  * Perform a command, but:
  * * focus the mathfield
- * * provide haptic and audio feedback
  * This is used by the virtual keyboard when command keys (delete, arrows,
  *  etc..) are pressed.
  */
@@ -164,13 +154,6 @@ function performWithFeedback(
 ): boolean {
   if (!mathfield) return false;
   mathfield.focus();
-
-  if (MathfieldElement.keypressVibration && canVibrate())
-    navigator.vibrate(HAPTIC_FEEDBACK_DURATION);
-
-  const info = getCommandInfo(selector);
-  globalThis.MathfieldElement.playSound(info?.audioFeedback ?? 'keypress');
-
   const result = mathfield.executeCommand(selector);
   mathfield.scrollIntoView();
   return result;
@@ -199,7 +182,6 @@ register(
   { complete },
   {
     target: 'mathfield',
-    audioFeedback: 'return',
     canUndo: true,
     changeContent: true,
     changeSelection: true,
@@ -223,7 +205,6 @@ register(
   { nextSuggestion, previousSuggestion },
   {
     target: 'mathfield',
-    audioFeedback: 'keypress',
     changeSelection: true,
   }
 );

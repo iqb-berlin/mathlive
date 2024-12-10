@@ -135,66 +135,6 @@
 
 
 
-
-
-
-    // mathVirtualKeyboard.layouts = [
-    //   {
-    //     label: 'minimal',
-    //     tooltip: 'Only the essential',
-    //     layers: [
-    //       {
-    //         style: `
-    //           .digit { background: blue !important; color: white !important }
-    //           .variant_indicator::before { content: '•'; color: #38d; }`,
-    //         rows: [
-    //           [
-    //             // {
-    //             //   latex: 'x',
-    //             //   insert: 'x',
-    //             //   shift: { latex: 'a', insert: 's' },
-    //             // },
-    //             {
-    //               label: 'Aa',
-    //               class: 'if-math-mode',
-    //               command: ['perform-with-feedback', ['switch-mode', 'text']],
-    //             },
-    //             {
-    //               label: '√x',
-    //               class: 'if-text-mode',
-    //               command: ['perform-with-feedback', ['switch-mode', 'math']],
-    //             },
-    //             '-',
-    //             '\\times',
-    //             '\\frac{#@}{#?}',
-    //             '=',
-    //             '.',
-    //             '(',
-    //             ')',
-    //             '\\sqrt{#0}',
-    //             '#@^{#?}',
-    //           ],
-    //           [
-    //             { class: 'variant_indicator', latex: '1' },
-    //             { class: 'digit', latex: '2' },
-    //             { class: 'digit', latex: '3' },
-    //             { class: 'digit', latex: '4' },
-    //             { class: 'digit', latex: '5' },
-    //             { class: 'digit', latex: '6' },
-    //             { class: 'digit', latex: '7' },
-    //             { class: 'digit', latex: '8' },
-    //             { class: 'digit', latex: '9' },
-    //             { class: 'digit', latex: '0' },
-    //           ],
-    //         ],
-    //       },
-    //     ],
-    //   },
-    //   'alphabetic',
-    // ];
-
-
-
     function setupMathfield(mf) {
 
       MathfieldElement.fractionNavigationOrder = 'denominator-numerator'

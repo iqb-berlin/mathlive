@@ -15,10 +15,7 @@ import type {
   ApplyStyleOptions,
 } from '../public/core-types';
 
-import { canVibrate } from '../ui/utils/capabilities';
-
 import { Atom } from '../core/atom-class';
-import { gFontsState } from '../core/fonts';
 import { defaultBackgroundColorMap, defaultColorMap } from '../core/color';
 import {
   getMacroDefinition,
@@ -49,7 +46,6 @@ import {
 } from '../editor/suggestion-popover';
 import { l10n, localize } from '../core/l10n';
 import {
-  HAPTIC_FEEDBACK_DURATION,
   SelectorPrivate,
   perform,
   getCommandTarget,
@@ -474,8 +470,8 @@ If you are using Vue, this may be because you are using the runtime-only build o
     // When fonts are done loading, re-render
     // (the selection highlighting may be out of date due to the HTML layout
     // having been updated with the new font metrics)
-    if (gFontsState !== 'ready')
-      document.fonts.ready.then(() => renderSelection(this));
+    // if (gFontsState !== 'ready')
+    //   document.fonts.ready.then(() => renderSelection(this));
 
     // The mathfield container is initially set with a visibility of hidden
     // to minimize flashing during construction.
@@ -1111,13 +1107,6 @@ If you are using Vue, this may be because you are using the runtime-only build o
 
     options = options ?? { mode: 'math' };
     if (options.focus) this.focus();
-
-    if (options.feedback) {
-      if (globalThis.MathfieldElement.keypressVibration && canVibrate())
-        navigator.vibrate(HAPTIC_FEEDBACK_DURATION);
-
-      globalThis.MathfieldElement.playSound('keypress');
-    }
 
     if (s === '\\\\') {
       // This string is interpreted as an "insert row after" command

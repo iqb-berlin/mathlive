@@ -15,12 +15,8 @@ import type { _Mathfield } from '../editor-mathfield/mathfield-private';
 import { Atom } from '../core/atom-class';
 import { joinLatex } from '../core/tokenizer';
 import { fromJson } from '../core/atom';
-
 import { toMathML } from '../formats/atom-to-math-ml';
-
 import { atomToAsciiMath } from '../formats/atom-to-ascii-math';
-import { atomToSpeakableText } from '../formats/atom-to-speakable-text';
-import { defaultAnnounceHook } from '../editor/a11y';
 
 import {
   compareSelection,
@@ -452,34 +448,6 @@ export class _Model implements Model {
 
     if (format === 'math-ml') return toMathML(atom);
 
-    if (format === 'spoken') return atomToSpeakableText(atom);
-
-    if (format === 'spoken-text') {
-      const saveTextToSpeechMarkup =
-        globalThis.MathfieldElement.textToSpeechMarkup;
-      globalThis.MathfieldElement.textToSpeechMarkup = '';
-      const result = atomToSpeakableText(atom);
-      globalThis.MathfieldElement.textToSpeechMarkup = saveTextToSpeechMarkup;
-      return result;
-    }
-
-    if (
-      format === 'spoken-ssml' ||
-      format === 'spoken-ssml-with-highlighting'
-    ) {
-      const saveTextToSpeechMarkup =
-        globalThis.MathfieldElement.textToSpeechMarkup;
-      // Const savedAtomIdsSettings = this.config.atomIdsSettings;    // @revisit
-      globalThis.MathfieldElement.textToSpeechMarkup = 'ssml';
-      // If (format === 'spoken-ssml-with-highlighting') {     // @revisit
-      //     this.config.atomIdsSettings = { seed: 'random' };
-      // }
-      const result = atomToSpeakableText(atom);
-      globalThis.MathfieldElement.textToSpeechMarkup = saveTextToSpeechMarkup;
-      // This.config.atomIdsSettings = savedAtomIdsSettings;      // @revisit
-      return result;
-    }
-
     if (format === 'plain-text') return atomToAsciiMath(atom, { plain: true });
 
     if (format === 'ascii-math') return atomToAsciiMath(atom);
@@ -633,9 +601,6 @@ export class _Model implements Model {
    * or other assistive device, for example when changing the selection or
    * moving the insertion point.
    *
-   * It can also be used with the 'plonk' command to provide an audible
-   * feedback when a command is not possible.
-   *
    * This method should not be called from other methods of the model
    * (such as `setSelection`) as these methods can also be called
    * programmatically and a feedback in these case would be innapropriate,
@@ -647,17 +612,14 @@ export class _Model implements Model {
     previousPosition?: number,
     atoms: Readonly<Atom[]> = []
   ): void {
-    const success =
-      this.mathfield.host?.dispatchEvent(
-        new CustomEvent('announce', {
-          detail: { command, previousPosition, atoms },
-          cancelable: true,
-          bubbles: true,
-          composed: true,
-        })
-      ) ?? true;
-    if (success)
-      defaultAnnounceHook(this.mathfield, command, previousPosition, atoms);
+    this.mathfield.host?.dispatchEvent(
+      new CustomEvent('announce', {
+        detail: { command, previousPosition, atoms },
+        cancelable: true,
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   // Suppress notification while scope is executed, then notify of content

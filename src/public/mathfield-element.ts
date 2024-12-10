@@ -30,19 +30,11 @@ import {
 import { _Mathfield } from '../editor-mathfield/mathfield-private';
 import { offsetFromPoint } from '../editor-mathfield/pointer-input';
 import { getElementInfo, getHref } from '../editor-mathfield/utils';
-import {
-  isBrowser,
-  isInIframe,
-  isTouchCapable,
-} from '../ui/utils/capabilities';
-import { resolveUrl } from '../common/script-url';
+import { isBrowser, isTouchCapable } from '../ui/utils/capabilities';
 import {
   reparseAllMathfields,
   requestUpdate,
 } from '../editor-mathfield/render';
-import { reloadFonts, loadFonts } from '../core/fonts';
-import { defaultSpeakHook } from '../editor/speech';
-import { defaultReadAloudHook } from '../editor/speech-read-aloud';
 import type { ComputeEngine } from '@cortex-js/compute-engine';
 
 import { l10n } from '../core/l10n';
@@ -87,7 +79,6 @@ if (!isBrowser()) {
   * by focusing an element adjacent to the mathfield.
   *
   * If the event is canceled (i.e. `evt.preventDefault()` is called inside your
-  * event handler), the default behavior is to play a "plonk" sound.
   *
   * @category Web Component
  */
@@ -99,13 +90,10 @@ export type MoveOutEvent = {
  * - `"auto"`: the virtual keyboard is triggered when a
  * mathfield is focused on a touch capable device.
  * - `"manual"`: the virtual keyboard is not triggered automatically
- * - `"sandboxed"`: the virtual keyboard is displayed in the current browsing
- * context (iframe) if it has a defined container or is the top-level browsing
- * context.
- *
+
  * @category Virtual Keyboard
  */
-export type VirtualKeyboardPolicy = 'auto' | 'manual' | 'sandboxed';
+export type VirtualKeyboardPolicy = 'auto' | 'manual';
 
 declare global {
   /**
@@ -279,8 +267,6 @@ export interface MathfieldElementAttributes {
   'virtual-keyboard-target-origin': string;
 }
 
-const AUDIO_FEEDBACK_VOLUME = 0.5; // From 0.0 to 1.0
-
 /** @internal */
 const DEPRECATED_OPTIONS = {
   letterShapeStyle: 'mf.letterShapeStyle = ...',
@@ -305,26 +291,14 @@ const DEPRECATED_OPTIONS = {
   virtualKeyboardMode: 'mf.mathVirtualKeyboardPolicy = ...',
   customVirtualKeyboardLayers: 'mathVirtualKeyboard.layers = ...',
   customVirtualKeyboards: 'mathVirtualKeyboard.layouts = ...',
-  keypressSound: 'mathVirtualKeyboard.keypressSound = ...',
   keypressVibration: 'mathVirtualKeyboard.keypressVibration = ...',
-  plonkSound: 'mathVirtualKeyboard.plonkSound = ...',
   virtualKeyboardContainer: 'mathVirtualKeyboard.container = ...',
   virtualKeyboardLayout: 'mathVirtualKeyboard.alphabeticLayout = ...',
   virtualKeyboardTheme: 'No longer supported',
   virtualKeyboardToggleGlyph: 'No longer supported',
   virtualKeyboardToolbar: 'mathVirtualKeyboard.editToolbar = ...',
   virtualKeyboards: 'Use `mathVirtualKeyboard.layouts`',
-  speechEngine: '`MathfieldElement.speechEngine`',
-  speechEngineRate: '`MathfieldElement.speechEngineRate`',
-  speechEngineVoice: '`MathfieldElement.speechEngineVoice`',
-  textToSpeechMarkup: '`MathfieldElement.textToSpeechMarkup`',
-  textToSpeechRules: '`MathfieldElement.textToSpeechRules`',
-  textToSpeechRulesOptions: '`MathfieldElement.textToSpeechRulesOptions`',
-  readAloudHook: '`MathfieldElement.readAloudHook`',
-  speakHook: '`MathfieldElement.speakHook`',
   computeEngine: '`MathfieldElement.computeEngine`',
-  fontsDirectory: '`MathfieldElement.fontsDirectory`',
-  soundsDirectory: '`MathfieldElement.soundsDirectory`',
   createHTML: '`MathfieldElement.createHTML`',
   onExport: '`mf.onExport`',
   onInlineShortcut: '`mf.onInlineShortcut`',
@@ -549,7 +523,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
       'min-font-scale': 'number',
       'max-matrix-cols': 'number',
       'popover-policy': 'string',
-
       'math-mode-space': 'string',
       'read-only': 'boolean',
       'remove-extraneous-parentheses': 'on/off',
@@ -578,215 +551,14 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
     ];
   }
 
-  /**
-   * A URL fragment pointing to the directory containing the fonts
-   * necessary to render a formula.
-   *
-   * These fonts are available in the `/dist/fonts` directory of the SDK.
-   *
-   * Customize this value to reflect where you have copied these fonts,
-   * or to use the CDN version.
-   *
-   * The default value is `"./fonts"`. Use `null` to prevent
-   * any fonts from being loaded.
-   *
-   * Changing this setting after the mathfield has been created will have
-   * no effect.
-   *
-   * ```javascript
-   * {
-   *      // Use the CDN version
-   *      fontsDirectory: ''
-   * }
-   * ```
-   *
-   * ```javascript
-   * {
-   *      // Use a directory called "fonts", located next to the
-   *      // `mathlive.js` (or `mathlive.mjs`) file.
-   *      fontsDirectory: './fonts'
-   * }
-   * ```
-   *
-   * ```javascript
-   * {
-   *      // Use a directory located at the root of your website
-   *      fontsDirectory: 'https://example.com/fonts'
-   * }
-   * ```
-   *
-   */
-  static get fontsDirectory(): string | null {
-    return this._fontsDirectory;
-  }
-  static set fontsDirectory(value: string | null) {
-    if (value !== this._fontsDirectory) {
-      this._fontsDirectory = value;
-      reloadFonts();
-    }
-  }
-
   static openUrl = (href: string): void => {
     if (!href) return;
     const url = new URL(href);
-    if (!['http:', 'https:', 'file:'].includes(url.protocol.toLowerCase())) {
-      MathfieldElement.playSound('plonk');
+    if (!['http:', 'https:', 'file:'].includes(url.protocol.toLowerCase()))
       return;
-    }
+
     window.open(url, '_blank');
   };
-
-  /** @internal */
-  get fontsDirectory(): never {
-    throw new Error('Use MathfieldElement.fontsDirectory instead');
-  }
-  /** @internal */
-  set fontsDirectory(_value: unknown) {
-    throw new Error('Use MathfieldElement.fontsDirectory instead');
-  }
-
-  /** @internal */
-  private static _fontsDirectory: string | null = './fonts';
-
-  /**
-   * A URL fragment pointing to the directory containing the optional
-   * sounds used to provide feedback while typing.
-   *
-   * Some default sounds are available in the `/dist/sounds` directory of the SDK.
-   *
-   * Use `null` to prevent any sound from being loaded.
-   * @category Virtual Keyboard
-   */
-  static get soundsDirectory(): string | null {
-    return this._soundsDirectory;
-  }
-  static set soundsDirectory(value: string | null) {
-    this._soundsDirectory = value;
-    this.audioBuffers = {};
-  }
-
-  /** @internal */
-  get soundsDirectory(): never {
-    throw new Error('Use MathfieldElement.soundsDirectory instead');
-  }
-  /** @internal */
-  set soundsDirectory(_value: unknown) {
-    throw new Error('Use MathfieldElement.soundsDirectory instead');
-  }
-
-  /** @internal */
-  private static _soundsDirectory: string | null = './sounds';
-
-  /**
-   * When a key on the virtual keyboard is pressed, produce a short haptic
-   * feedback, if the device supports it.
-   * @category Virtual Keyboard
-   */
-  static keypressVibration = true;
-
-  /**
-   * When a key on the virtual keyboard is pressed, produce a short audio
-   * feedback.
-   *
-   * If the property is set to a `string`, the same sound is played in all
-   * cases. Otherwise, a distinct sound is played:
-   *
-   * -   `delete` a sound played when the delete key is pressed
-   * -   `return` ... when the return/tab key is pressed
-   * -   `spacebar` ... when the spacebar is pressed
-   * -   `default` ... when any other key is pressed. This property is required,
-   *     the others are optional. If they are missing, this sound is played as
-   *     well.
-   *
-   * The value of the properties should be either a string, the name of an
-   * audio file in the `soundsDirectory` directory or `null` to suppress the sound.
-   * @category Virtual Keyboard
-   */
-  static get keypressSound(): Readonly<{
-    spacebar: null | string;
-    return: null | string;
-    delete: null | string;
-    default: null | string;
-  }> {
-    return this._keypressSound;
-  }
-  static set keypressSound(
-    value:
-      | null
-      | string
-      | {
-          spacebar?: null | string;
-          return?: null | string;
-          delete?: null | string;
-          default: null | string;
-        }
-  ) {
-    this.audioBuffers = {};
-
-    if (value === null) {
-      this._keypressSound = {
-        spacebar: null,
-        return: null,
-        delete: null,
-        default: null,
-      };
-    } else if (typeof value === 'string') {
-      this._keypressSound = {
-        spacebar: value,
-        return: value,
-        delete: value,
-        default: value,
-      };
-    } else if (typeof value === 'object' && 'default' in value) {
-      this._keypressSound = {
-        spacebar: value.spacebar ?? value.default,
-        return: value.return ?? value.default,
-        delete: value.delete ?? value.default,
-        default: value.default,
-      };
-    }
-  }
-  /** @internal */
-  private static _keypressSound: {
-    spacebar: null | string;
-    return: null | string;
-    delete: null | string;
-    default: null | string;
-  } = {
-    spacebar: 'keypress-spacebar.wav',
-    return: 'keypress-return.wav',
-    delete: 'keypress-delete.wav',
-    default: 'keypress-standard.wav',
-  };
-
-  /** @ignore */
-  private static _plonkSound: string | null = 'plonk.wav';
-
-  /**
-   * Sound played to provide feedback when a command has no effect, for example
-   * when pressing the spacebar at the root level.
-   *
-   * The property is either:
-   * - a string, the name of an audio file in the `soundsDirectory` directory
-   * - null to turn off the sound
-   */
-  static get plonkSound(): string | null {
-    return this._plonkSound;
-  }
-  static set plonkSound(value: string | null) {
-    this.audioBuffers = {};
-    this._plonkSound = value;
-  }
-
-  /** @internal */
-  private static audioBuffers: { [key: string]: AudioBuffer } = {};
-  /** @internal */
-  private static _audioContext: AudioContext;
-  /** @internal */
-  private static get audioContext(): AudioContext {
-    if (!this._audioContext) this._audioContext = new AudioContext();
-    return this._audioContext;
-  }
 
   /**
    * Support for [Trusted Type](https://w3c.github.io/webappsec-trusted-types/dist/spec/).
@@ -797,122 +569,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
    */
   static createHTML: (html: string) => any = (x) => x;
   // @todo https://github.com/microsoft/TypeScript/issues/30024
-
-  /**
-   * Indicates which speech engine to use for speech output.
-   *
-   * Use `local` to use the OS-specific TTS engine.
-   *
-   * Use `amazon` for Amazon Text-to-Speech cloud API. You must include the
-   * AWS API library and configure it with your API key before use.
-   *
-   * **See**
-   * {@link mathfield/guides/speech/ | Guide: Speech}
-   */
-  static get speechEngine(): 'local' | 'amazon' {
-    return this._speechEngine;
-  }
-  static set speechEngine(value: 'local' | 'amazon') {
-    this._speechEngine = value;
-  }
-  /** @internal */
-  private static _speechEngine: 'local' | 'amazon';
-
-  /**
-   * Sets the speed of the selected voice.
-   *
-   * One of `x-slow`, `slow`, `medium`, `fast`, `x-fast` or a value as a
-   * percentage.
-   *
-   * Range is `20%` to `200%` For example `200%` to indicate a speaking rate
-   * twice the default rate.
-   */
-  static get speechEngineRate(): string {
-    return this._speechEngineRate;
-  }
-  static set speechEngineRate(value: string) {
-    this._speechEngineRate = value;
-  }
-  /** @internal */
-  private static _speechEngineRate = '100%';
-
-  /**
-   * Indicates the voice to use with the speech engine.
-   *
-   * This is dependent on the speech engine. For Amazon Polly, see here:
-   * https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
-   *
-   */
-  static get speechEngineVoice(): string {
-    return this._speechEngineVoice;
-  }
-  static set speechEngineVoice(value: string) {
-    this._speechEngineVoice = value;
-  }
-  /** @internal */
-  private static _speechEngineVoice = 'Joanna';
-
-  /**
-   * The markup syntax to use for the output of conversion to spoken text.
-   *
-   * Possible values are `ssml` for the SSML markup or `mac` for the macOS
-   * markup, i.e. `&#91;&#91;ltr&#93;&#93;`.
-   *
-   */
-  static get textToSpeechMarkup(): '' | 'ssml' | 'ssml_step' | 'mac' {
-    return this._textToSpeechMarkup;
-  }
-  static set textToSpeechMarkup(value: '' | 'ssml' | 'ssml_step' | 'mac') {
-    this._textToSpeechMarkup = value;
-  }
-  /** @internal */
-  private static _textToSpeechMarkup: '' | 'ssml' | 'ssml_step' | 'mac' = '';
-
-  /**
-   * Specify which set of text to speech rules to use.
-   *
-   * A value of `mathlive` indicates that the simple rules built into MathLive
-   * should be used.
-   *
-   * A value of `sre` indicates that the Speech Rule Engine from Volker Sorge
-   * should be used.
-   *
-   * **(Caution)** SRE is not included or loaded by MathLive. For this option to
-   * work SRE should be loaded separately.
-   *
-   * **See**
-   * {@link mathfield/guides/speech/ | Guide: Speech}
-   */
-  static get textToSpeechRules(): 'mathlive' | 'sre' {
-    return this._textToSpeechRules;
-  }
-  static set textToSpeechRules(value: 'mathlive' | 'sre') {
-    this._textToSpeechRules = value;
-  }
-  /** @internal */
-  private static _textToSpeechRules: 'mathlive' | 'sre' = 'mathlive';
-
-  /**
-   * A set of key/value pairs that can be used to configure the speech rule
-   * engine.
-   *
-   * Which options are available depends on the speech rule engine in use.
-   * There are no options available with MathLive's built-in engine. The
-   * options for the SRE engine are documented
-   * {@link https://github.com/zorkow/speech-rule-engine | here}
-   */
-  static get textToSpeechRulesOptions(): Readonly<Record<string, string>> {
-    return this._textToSpeechRulesOptions;
-  }
-  static set textToSpeechRulesOptions(value: Record<string, string>) {
-    this._textToSpeechRulesOptions = value;
-  }
-  /** @internal */
-  private static _textToSpeechRulesOptions: Record<string, string> = {};
-
-  static speakHook: (text: string) => void = defaultSpeakHook;
-  static readAloudHook: (element: HTMLElement, text: string) => void =
-    defaultReadAloudHook;
 
   /**
    * The locale (language + region) to use for string localization.
@@ -1105,82 +761,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
     reparseAllMathfields();
   }
 
-  static async loadSound(
-    sound: 'plonk' | 'keypress' | 'spacebar' | 'delete' | 'return'
-  ): Promise<void> {
-    //  Clear out the cached audio buffer
-    delete this.audioBuffers[sound];
-
-    let soundFile: string | undefined | null = '';
-    switch (sound) {
-      case 'keypress':
-        soundFile = this._keypressSound.default;
-        break;
-      case 'return':
-        soundFile = this._keypressSound.return;
-        break;
-      case 'spacebar':
-        soundFile = this._keypressSound.spacebar;
-        break;
-      case 'delete':
-        soundFile = this._keypressSound.delete;
-        break;
-      case 'plonk':
-        soundFile = this.plonkSound;
-        break;
-    }
-
-    if (typeof soundFile !== 'string') return;
-    soundFile = soundFile.trim();
-    const soundsDirectory = this.soundsDirectory;
-    if (
-      soundsDirectory === undefined ||
-      soundsDirectory === null ||
-      soundsDirectory === 'null' ||
-      soundFile === 'none' ||
-      soundFile === 'null'
-    )
-      return;
-
-    // Fetch the audio buffer
-    try {
-      const response = await fetch(
-        await resolveUrl(`${soundsDirectory}/${soundFile}`)
-      );
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-      this.audioBuffers[sound] = audioBuffer;
-    } catch {}
-  }
-
-  static async playSound(
-    name: 'keypress' | 'spacebar' | 'delete' | 'plonk' | 'return'
-  ): Promise<void> {
-    // According to MDN:
-    // https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/state
-    //In iOS Safari, when a user leaves the page (e.g. switches tabs, minimizes the browser, or turns off the screen) the audio context's state changes to "interrupted" and needs to be resumed
-
-    if (
-      this.audioContext.state === 'suspended' ||
-      this.audioContext.state === ('interrupted' as AudioContextState)
-    )
-      await this.audioContext.resume();
-
-    if (!this.audioBuffers[name]) await this.loadSound(name);
-    if (!this.audioBuffers[name]) return;
-
-    // A sound source can't be played twice, so creeate a new one
-    const soundSource = this.audioContext.createBufferSource();
-    soundSource.buffer = this.audioBuffers[name];
-
-    // Set the volume
-    const gainNode = this.audioContext.createGain();
-    gainNode.gain.value = AUDIO_FEEDBACK_VOLUME;
-    soundSource.connect(gainNode).connect(this.audioContext.destination);
-
-    soundSource.start();
-  }
-
   /** @internal */
   private _mathfield: null | _Mathfield;
 
@@ -1249,7 +829,7 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
           'color:#db1111; font-size: 1.1rem'
         );
         console.warn(
-          `Some of the options passed to \`new MathfieldElement(...)\` are invalid. 
+          `Some of the options passed to \`new MathfieldElement(...)\` are invalid.
           See mathfield/changelog/ for details.`
         );
         for (const warning of warnings) console.warn(warning);
@@ -1436,9 +1016,9 @@ import 'https://unpkg.com/@cortex-js/compute-engine?module';
     if (!window[Symbol.for('io.cortexjs.compute-engine')]) {
       console.error(
         `MathLive {{SDK_VERSION}}: The CortexJS Compute Engine library is not available.
-        
+
         Load the library, for example with:
-        
+
         import "https://unpkg.com/@cortex-js/compute-engine?module"`
       );
       return null;
@@ -1454,9 +1034,9 @@ import 'https://unpkg.com/@cortex-js/compute-engine?module';
     if (!window[Symbol.for('io.cortexjs.compute-engine')]) {
       console.error(
         `MathLive {{SDK_VERSION}}: The Compute Engine library is not available.
-        
+
         Load the library, for example with:
-        
+
         import "https://unpkg.com/@cortex-js/compute-engine?module"`
       );
     }
@@ -1926,7 +1506,7 @@ import "https://unpkg.com/@cortex-js/compute-engine?module";
     if (
       evt.type === 'blur' &&
       Scrim.scrim?.state === 'closed' &&
-      !(isTouchCapable() && isInIframe())
+      !isTouchCapable()
     )
       this._mathfield?.blur();
   }
@@ -2060,7 +1640,7 @@ import "https://unpkg.com/@cortex-js/compute-engine?module";
     });
 
     // Load the fonts
-    void loadFonts();
+    console.log('Loading fonts in connectedCallback');
   }
 
   /**
@@ -2339,7 +1919,7 @@ mf.macros = {
     this._setOptions({ backgroundColorMap: value });
   }
 
-  /** @category Customization 
+  /** @category Customization
   * Control the letter shape style:
 
   | `letterShapeStyle` | xyz | ABC | αβɣ | ΓΔΘ |
@@ -2873,15 +2453,6 @@ mf.macros = {
 function toCamelCase(s: string): string {
   return s.replace(/[^a-zA-Z\d]+(.)/g, (_m, c) => c.toUpperCase());
 }
-
-// Function toKebabCase(s: string): string {
-//     return s
-//         .match(
-//             /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
-//         )
-//         .map((x: string) => x.toLowerCase())
-//         .join('-');
-// }
 
 function getOptionsFromAttributes(
   mfe: MathfieldElement

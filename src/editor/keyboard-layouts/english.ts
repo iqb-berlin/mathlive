@@ -76,7 +76,6 @@ export const APPLE_ENGLISH: KeyboardLayout = {
     NumpadDecimal: ['.', '.', '.', '.'],
     IntlBackslash: ['§', '±', '§', '±'],
     NumpadEqual: ['=', '=', '=', '='],
-    AudioVolumeUp: ['', '=', '', '='],
   },
 };
 

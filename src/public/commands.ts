@@ -8,27 +8,6 @@ import type {
 } from './core-types';
 import type { Mathfield, Model } from './mathfield';
 
-/**
- * How much of the formula should be spoken:
- * | | |
- * |---:|:---|
- * | `all` | the entire formula |
- * | `selection` | the selection portion of the formula |
- * | `left` | the element to the left of the selection |
- * | `right` | the element to the right of the selection |
- * | `group` | the group (numerator, root, etc..) the selection is in |
- * | `parent` | the parent of the selection |
- *
- * @category Speech
- */
-export type SpeechScope =
-  | 'all'
-  | 'selection'
-  | 'left'
-  | 'right'
-  | 'group'
-  | 'parent';
-
 // @revisit: maybe a command attribute instead?
 /**
  * To perform editing commands on a mathfield, use {@linkcode MathfieldElement.executeCommand} with the commands below.
@@ -69,11 +48,7 @@ export interface Commands {
   redo: (mathfield: Mathfield) => boolean;
 
   /**
-   * Perform a command and include interactive feedback such as sound and
-   * haptic feedback.
-   *
-   * This is useful to simulate user interaction, for example for commands
-   * from the virtual keyboard
+   * Perform a command
    */
   performWithFeedback: (mathfield: Mathfield, command: string) => boolean;
 
@@ -138,25 +113,10 @@ export interface Commands {
     options: {
       /** If true, the mathfield will be focused */
       focus: boolean;
-      /** If true, provide audio and haptic feedback */
-      feedback: boolean;
       /** If true, generate some synthetic
        * keystrokes (useful to trigger inline shortcuts, for example).
        */
       simulateKeystroke: boolean;
-    }
-  ) => boolean;
-
-  speak: (
-    mathfield: Mathfield,
-    /** {@inheritDoc SpeechScope} */
-    scope: SpeechScope,
-    options: {
-      /**
-       * In addition to speaking the requested portion of the formula,
-       * visually highlight it as it is read (read aloud functionality)
-       */
-      withHighlighting: boolean;
     }
   ) => boolean;
 
