@@ -3,10 +3,6 @@
   "version": "0.102.0",
   "description": "A web component for math input",
   "license": "MIT",
-  "funding": {
-    "type": "individual",
-    "url": "https://paypal.me/arnogourdol"
-  },
   "files": [
     "/dist"
   ],
@@ -49,9 +45,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/arnog/mathlive.git"
+    "url": "git@github.com:iqb-berlin/mathlive.git"
   },
-  "bugs": "https://github.com/arnog/mathlive/issues/",
+  "bugs": "https://github.com/iqb-berlin/mathlive/issues",
   "scripts": {
     "doc": "bash ./scripts/update-docs.sh",
     "build": "bash ./scripts/build.sh",
@@ -63,8 +59,9 @@
     "test": "bash ./scripts/test.sh",
     "version": "bash ./scripts/version.sh"
   },
-  "author": "Arno Gourdol <arno@arno.org>",
+  "author": "Achim Hoch <https://github.com/jojohoch>",
   "contributors": [
+    "Arno Gourdol <arno@arno.org>",
     "Louis Larpin (lilfaf.github.io)",
     "Neil Soiffer (https://github.com/NSoiffer)",
     "Jason Boxman (https://github.com/jboxman)",
