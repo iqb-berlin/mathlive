@@ -1,7 +1,7 @@
 {
-  "name": "mathlive",
-  "version": "0.102.0",
-  "description": "A web component for math input",
+  "name": "@iqb/mathlive",
+  "version": "0.1.0",
+  "description": "A web component for math input based on github.com/arnog/mathlive",
   "license": "MIT",
   "files": [
     "/dist"
@@ -56,6 +56,7 @@
     "lint": "eslint --fix src/; prettier -w src/",
     "prepare": "bash ./scripts/build.sh production",
     "start": "bash ./scripts/start.sh",
+    "publish": "npm publish --access public",
     "test": "bash ./scripts/test.sh",
     "version": "bash ./scripts/version.sh"
   },
