@@ -539,9 +539,6 @@ export type InsertOptions = {
    * the insertion
    */
   focus?: boolean;
-  /** If `true`, provide audio and haptic feedback
-   */
-  feedback?: boolean;
   /** If `true`, scroll the mathfield into view after insertion such that the
    * insertion point is visible
    */

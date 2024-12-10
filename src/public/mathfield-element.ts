@@ -560,7 +560,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
     ];
   }
 
-
   static openUrl = (href: string): void => {
     if (!href) return;
     const url = new URL(href);
@@ -569,34 +568,6 @@ export class MathfieldElement extends HTMLElement implements Mathfield {
 
     window.open(url, '_blank');
   };
-
-
-  /**
-   * When a key on the virtual keyboard is pressed, produce a short haptic
-   * feedback, if the device supports it.
-   * @category Virtual Keyboard
-   */
-  static keypressVibration = true;
-
-  /**
-   * When a key on the virtual keyboard is pressed, produce a short audio
-   * feedback.
-   *
-   * If the property is set to a `string`, the same sound is played in all
-   * cases. Otherwise, a distinct sound is played:
-   *
-   * -   `delete` a sound played when the delete key is pressed
-   * -   `return` ... when the return/tab key is pressed
-   * -   `spacebar` ... when the spacebar is pressed
-   * -   `default` ... when any other key is pressed. This property is required,
-   *     the others are optional. If they are missing, this sound is played as
-   *     well.
-   *
-   * The value of the properties should be either a string, the name of an
-   * audio file in the `soundsDirectory` directory or `null` to suppress the sound.
-   * @category Virtual Keyboard
-   */
-
 
   /**
    * Support for [Trusted Type](https://w3c.github.io/webappsec-trusted-types/dist/spec/).
@@ -1656,7 +1627,7 @@ import "https://unpkg.com/@cortex-js/compute-engine?module";
     if (
       evt.type === 'blur' &&
       Scrim.scrim?.state === 'closed' &&
-      !(isTouchCapable())
+      !isTouchCapable()
     )
       this._mathfield?.blur();
   }

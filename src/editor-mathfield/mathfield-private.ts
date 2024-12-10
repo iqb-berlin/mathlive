@@ -15,8 +15,6 @@ import type {
   ApplyStyleOptions,
 } from '../public/core-types';
 
-import { canVibrate } from '../ui/utils/capabilities';
-
 import { Atom } from '../core/atom-class';
 import { defaultBackgroundColorMap, defaultColorMap } from '../core/color';
 import {
@@ -48,7 +46,6 @@ import {
 } from '../editor/suggestion-popover';
 import { l10n, localize } from '../core/l10n';
 import {
-  HAPTIC_FEEDBACK_DURATION,
   SelectorPrivate,
   perform,
   getCommandTarget,
@@ -1110,11 +1107,6 @@ If you are using Vue, this may be because you are using the runtime-only build o
 
     options = options ?? { mode: 'math' };
     if (options.focus) this.focus();
-
-    if (options.feedback) {
-      if (globalThis.MathfieldElement.keypressVibration && canVibrate())
-        navigator.vibrate(HAPTIC_FEEDBACK_DURATION);
-    }
 
     if (s === '\\\\') {
       // This string is interpreted as an "insert row after" command

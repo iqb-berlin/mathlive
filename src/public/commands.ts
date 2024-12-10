@@ -69,11 +69,7 @@ export interface Commands {
   redo: (mathfield: Mathfield) => boolean;
 
   /**
-   * Perform a command and include interactive feedback such as sound and
-   * haptic feedback.
-   *
-   * This is useful to simulate user interaction, for example for commands
-   * from the virtual keyboard
+   * Perform a command
    */
   performWithFeedback: (mathfield: Mathfield, command: string) => boolean;
 
@@ -138,8 +134,6 @@ export interface Commands {
     options: {
       /** If true, the mathfield will be focused */
       focus: boolean;
-      /** If true, provide audio and haptic feedback */
-      feedback: boolean;
       /** If true, generate some synthetic
        * keystrokes (useful to trigger inline shortcuts, for example).
        */

@@ -633,9 +633,6 @@ export class _Model implements Model {
    * or other assistive device, for example when changing the selection or
    * moving the insertion point.
    *
-   * It can also be used with the 'plonk' command to provide an audible
-   * feedback when a command is not possible.
-   *
    * This method should not be called from other methods of the model
    * (such as `setSelection`) as these methods can also be called
    * programmatically and a feedback in these case would be innapropriate,

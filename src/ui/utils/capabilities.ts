@@ -10,10 +10,6 @@ export function isTouchCapable(): boolean {
   return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 }
 
-export function canVibrate(): boolean {
-  return typeof navigator.vibrate === 'function';
-}
-
 export function osPlatform():
   | 'macos'
   | 'windows'

@@ -811,10 +811,6 @@ typedText: (text, options) => boolean;
 
 • **options**
 
-• **options.feedback**: `boolean`
-
-If true, provide audio and haptic feedback
-
 • **options.focus**: `boolean`
 
 If true, the mathfield will be focused
@@ -2903,20 +2899,6 @@ type InsertOptions: object;
 ```
 
 #### Type declaration
-
-<a id="feedback" name="feedback"></a>
-
-<MemberCard>
-
-##### InsertOptions.feedback?
-
-```ts
-optional feedback: boolean;
-```
-
-If `true`, provide audio and haptic feedback
-
-</MemberCard>
 
 <a id="focus-1" name="focus-1"></a>
 

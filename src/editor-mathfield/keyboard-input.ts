@@ -473,7 +473,6 @@ export function onKeystroke(
  * As a result, `text` can be a sequence of characters to be inserted.
  * @param {object} options
  * @param {boolean} options.focus - If true, the mathfield will be focused
- * @param {boolean} options.feedback - If true, provide audio and haptic feedback
  * @param {boolean} options.simulateKeystroke - If true, generate some synthetic
  * keystrokes (useful to trigger inline shortcuts, for example)
  * @private
@@ -483,7 +482,6 @@ export function onInput(
   text: string,
   options?: {
     focus?: boolean;
-    feedback?: boolean;
     mode?: ParseMode;
     simulateKeystroke?: boolean;
   }
@@ -496,7 +494,7 @@ export function onInput(
   options ??= {};
 
   //
-  // 1/ Focus (and scroll into view), then provide audio and haptic feedback
+  // 1/ Focus (and scroll into view)
   //
   if (options.focus) mathfield.focus();
   //

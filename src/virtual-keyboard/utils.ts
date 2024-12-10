@@ -1210,7 +1210,6 @@ function handleVirtualKeyboardEvent(controller) {
               keycap.shift,
               {
                 focus: true,
-                feedback: true,
                 scrollIntoView: true,
                 mode: 'math',
                 format: 'latex',
@@ -1240,7 +1239,6 @@ export function executeKeycapCommand(
       keycap.insert,
       {
         focus: true,
-        feedback: true,
         scrollIntoView: true,
         mode: 'math',
         format: 'latex',
@@ -1251,7 +1249,7 @@ export function executeKeycapCommand(
     command = [
       'typedText',
       keycap.key,
-      { focus: true, feedback: true, simulateKeystroke: true },
+      { focus: true, simulateKeystroke: true },
     ];
   }
 
@@ -1261,7 +1259,6 @@ export function executeKeycapCommand(
       keycap.latex,
       {
         focus: true,
-        feedback: true,
         scrollIntoView: true,
         mode: 'math',
         format: 'latex',
@@ -1272,7 +1269,7 @@ export function executeKeycapCommand(
     command = [
       'typedText',
       keycap.label,
-      { focus: true, feedback: true, simulateKeystroke: true },
+      { focus: true, simulateKeystroke: true },
     ];
   }
   VirtualKeyboard.singleton?.executeCommand(command);

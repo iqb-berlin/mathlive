@@ -30,8 +30,6 @@ declare global {
 
 // https://pdfs.semanticscholar.org/8887/25b82b8dbb45dd4dd69b36a65f092864adb0.pdf
 
-// "<audio src='non_existing_file.au'>File could not be played.</audio>"
-
 // "I am now <prosody rate='+0.06'>speaking 6% faster.</prosody>"
 
 const PRONUNCIATION: Record<string, string> = {

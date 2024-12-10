@@ -1,7 +1,5 @@
 import { isArray } from '../common/types';
-
 import { SelectorPrivate, CommandRegistry } from './types';
-
 import type { _Mathfield } from '../editor-mathfield/mathfield-private';
 import { requestUpdate } from '../editor-mathfield/render';
 import {
@@ -9,13 +7,8 @@ import {
   complete,
   removeSuggestion,
 } from '../editor-mathfield/autocomplete';
-import { canVibrate } from '../ui/utils/capabilities';
-import MathfieldElement from '../public/mathfield-element';
 
 export { SelectorPrivate };
-
-// @revisit: move to mathfield.vibrate()
-export const HAPTIC_FEEDBACK_DURATION = 3; // In ms
 
 type CommandTarget = 'model' | 'mathfield' | 'virtual-keyboard';
 
@@ -151,7 +144,6 @@ export function perform(
 /**
  * Perform a command, but:
  * * focus the mathfield
- * * provide haptic and audio feedback
  * This is used by the virtual keyboard when command keys (delete, arrows,
  *  etc..) are pressed.
  */
@@ -162,9 +154,6 @@ function performWithFeedback(
 ): boolean {
   if (!mathfield) return false;
   mathfield.focus();
-
-  if (MathfieldElement.keypressVibration && canVibrate())
-    navigator.vibrate(HAPTIC_FEEDBACK_DURATION);
   const result = mathfield.executeCommand(selector);
   mathfield.scrollIntoView();
   return result;
