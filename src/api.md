@@ -124,13 +124,6 @@ to map items on the screen with their MathML representation or vice-versa.
 
 </MemberCard>
 
-
-#### Keywords
-
-convert, latex,text
-
-</MemberCard>
-
 <a id="convertmathjsontolatex" name="convertmathjsontolatex"></a>
 
 <MemberCard>
@@ -171,7 +164,7 @@ mf.executeCommand('copyToClipboard');
 Some commands require an argument, for example to insert a character:
 
 ```ts
-mf.executeCommand('insert("x")');
+mf.executeCommand('insert("x")' });
 ```
 
 The argument can be specified in parentheses after the command name, or
@@ -655,11 +648,7 @@ insertDecimalSeparator: (mathfield) => boolean;
 performWithFeedback: (mathfield, command) => boolean;
 ```
 
-Perform a command and include interactive feedback such as sound and
-haptic feedback.
-
-This is useful to simulate user interaction, for example for commands
-from the virtual keyboard
+Perform a command
 
 • **mathfield**: `Mathfield`
 
@@ -669,7 +658,15 @@ from the virtual keyboard
 
 </MemberCard>
 
+<a id="plonk" name="plonk"></a>
 
+<MemberCard>
+
+##### Commands.plonk()
+
+```ts
+plonk: (mathfield) => boolean;
+```
 
 • **mathfield**: `Mathfield`
 
@@ -3077,6 +3074,10 @@ type OutputFormat:
   | "math-json"
   | "math-ml"
   | "plain-text"
+  | "spoken"
+  | "spoken-text"
+  | "spoken-ssml"
+  | "spoken-ssml-with-highlighting";
 ```
 
 | Format                | Description             |
@@ -3302,7 +3303,7 @@ typically just uppercase and lowercase letters, and digits 0-9 in some cases.
 const version: object;
 ```
 
-Current version: `0.102.0`
+Current version: `0.2.0`
 
 The version string of the SDK using the [semver](https://semver.org/) convention:
 
@@ -3321,7 +3322,7 @@ The version string of the SDK using the [semver](https://semver.org/) convention
 ##### version.mathlive
 
 ```ts
-mathlive: string = '0.102.0';
+mathlive: string = '0.2.0';
 ```
 
 </MemberCard>
@@ -3512,32 +3513,6 @@ mf.registers.arraystretch = 1.5;
 mf.registers.thinmuskip = { dimension: 2, unit: "mu" };
 mf.registers.medmuskip = "3mu";
 ```
-
-## Speech
-
-<a id="speechscope" name="speechscope"></a>
-
-### SpeechScope
-
-```ts
-type SpeechScope: 
-  | "all"
-  | "selection"
-  | "left"
-  | "right"
-  | "group"
-  | "parent";
-```
-
-How much of the formula should be spoken:
-| | |
-|---:|:---|
-| `all` | the entire formula |
-| `selection` | the selection portion of the formula |
-| `left` | the element to the left of the selection |
-| `right` | the element to the right of the selection |
-| `group` | the group (numerator, root, etc..) the selection is in |
-| `parent` | the parent of the selection |
 
 ## Static Rendering
 
@@ -3946,6 +3921,7 @@ optional style: string;
 
 This interface is implemented by:
 - `VirtualKeyboard`: when the browsing context is a top-level document
+- `VirtualKeyboardProxy`: when the browsing context is an iframe
 
 #### Extends
 
@@ -4005,6 +3981,18 @@ Specify behavior how origin of message from [postMessage](https://developer.mozi
 should be validated.
 
 **Default**: `"none"`
+
+</MemberCard>
+
+<a id="shiftpresscount" name="shiftpresscount"></a>
+
+<MemberCard>
+
+##### VirtualKeyboardInterface.shiftPressCount
+
+```ts
+shiftPressCount: number;
+```
 
 </MemberCard>
 
@@ -4985,9 +4973,6 @@ type VirtualKeyboardPolicy: "auto" | "manual";
 - `"auto"`: the virtual keyboard is triggered when a
 mathfield is focused on a touch capable device.
 - `"manual"`: the virtual keyboard is not triggered automatically
-- `"sandboxed"`: the virtual keyboard is displayed in the current browsing
-context (iframe) if it has a defined container or is the top-level browsing
-context.
 
 ## Web Component
 
@@ -6597,24 +6582,6 @@ according to a policy defined by the host.
 
 </MemberCard>
 
-<a id="readaloudhook" name="readaloudhook"></a>
-
-<MemberCard>
-
-##### MathfieldElement.readAloudHook()
-
-```ts
-static readAloudHook: (element, text) => void = defaultReadAloudHook;
-```
-
-• **element**: `HTMLElement`
-
-• **text**: `string`
-
-`void`
-
-</MemberCard>
-
 <a id="restorefocuswhendocumentfocused" name="restorefocuswhendocumentfocused"></a>
 
 <MemberCard>
@@ -6633,22 +6600,6 @@ disabled if it is not desired.
 
 </MemberCard>
 
-<a id="speakhook" name="speakhook"></a>
-
-<MemberCard>
-
-##### MathfieldElement.speakHook()
-
-```ts
-static speakHook: (text) => void = defaultSpeakHook;
-```
-
-• **text**: `string`
-
-`void`
-
-</MemberCard>
-
 <a id="version" name="version"></a>
 
 <MemberCard>
@@ -6656,7 +6607,7 @@ static speakHook: (text) => void = defaultSpeakHook;
 ##### MathfieldElement.version
 
 ```ts
-static version: string = '0.102.0';
+static version: string = '0.2.0';
 ```
 
 </MemberCard>
@@ -6855,176 +6806,6 @@ set static isFunction(value): void
 • **command**: `string`
 
 `boolean`
-
-</MemberCard>
-
-<a id="speechengine" name="speechengine"></a>
-
-<MemberCard>
-
-##### MathfieldElement.speechEngine
-
-```ts
-get static speechEngine(): "amazon" | "local"
-```
-
-Indicates which speech engine to use for speech output.
-
-Use `local` to use the OS-specific TTS engine.
-
-Use `amazon` for Amazon Text-to-Speech cloud API. You must include the
-AWS API library and configure it with your API key before use.
-
-**See**
-mathfield/guides/speech/ | Guide: Speech
-
-```ts
-set static speechEngine(value): void
-```
-
-• **value**: `"amazon"` \| `"local"`
-
-`"amazon"` \| `"local"`
-
-</MemberCard>
-
-<a id="speechenginerate" name="speechenginerate"></a>
-
-<MemberCard>
-
-##### MathfieldElement.speechEngineRate
-
-```ts
-get static speechEngineRate(): string
-```
-
-Sets the speed of the selected voice.
-
-One of `x-slow`, `slow`, `medium`, `fast`, `x-fast` or a value as a
-percentage.
-
-Range is `20%` to `200%` For example `200%` to indicate a speaking rate
-twice the default rate.
-
-```ts
-set static speechEngineRate(value): void
-```
-
-• **value**: `string`
-
-`string`
-
-</MemberCard>
-
-<a id="speechenginevoice" name="speechenginevoice"></a>
-
-<MemberCard>
-
-##### MathfieldElement.speechEngineVoice
-
-```ts
-get static speechEngineVoice(): string
-```
-
-Indicates the voice to use with the speech engine.
-
-This is dependent on the speech engine. For Amazon Polly, see here:
-https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
-
-```ts
-set static speechEngineVoice(value): void
-```
-
-• **value**: `string`
-
-`string`
-
-</MemberCard>
-
-<a id="texttospeechmarkup" name="texttospeechmarkup"></a>
-
-<MemberCard>
-
-##### MathfieldElement.textToSpeechMarkup
-
-```ts
-get static textToSpeechMarkup(): "" | "ssml" | "ssml_step" | "mac"
-```
-
-The markup syntax to use for the output of conversion to spoken text.
-
-Possible values are `ssml` for the SSML markup or `mac` for the macOS
-markup, i.e. `&#91;&#91;ltr&#93;&#93;`.
-
-```ts
-set static textToSpeechMarkup(value): void
-```
-
-• **value**: `""` \| `"ssml"` \| `"ssml_step"` \| `"mac"`
-
-`""` \| `"ssml"` \| `"ssml_step"` \| `"mac"`
-
-</MemberCard>
-
-<a id="texttospeechrules" name="texttospeechrules"></a>
-
-<MemberCard>
-
-##### MathfieldElement.textToSpeechRules
-
-```ts
-get static textToSpeechRules(): "sre" | "mathlive"
-```
-
-Specify which set of text to speech rules to use.
-
-A value of `mathlive` indicates that the simple rules built into MathLive
-should be used.
-
-A value of `sre` indicates that the Speech Rule Engine from Volker Sorge
-should be used.
-
-**(Caution)** SRE is not included or loaded by MathLive. For this option to
-work SRE should be loaded separately.
-
-**See**
-mathfield/guides/speech/ | Guide: Speech
-
-```ts
-set static textToSpeechRules(value): void
-```
-
-• **value**: `"sre"` \| `"mathlive"`
-
-`"sre"` \| `"mathlive"`
-
-</MemberCard>
-
-<a id="texttospeechrulesoptions" name="texttospeechrulesoptions"></a>
-
-<MemberCard>
-
-##### MathfieldElement.textToSpeechRulesOptions
-
-```ts
-get static textToSpeechRulesOptions(): Readonly<Record<string, string>>
-```
-
-A set of key/value pairs that can be used to configure the speech rule
-engine.
-
-Which options are available depends on the speech rule engine in use.
-There are no options available with MathLive's built-in engine. The
-options for the SRE engine are documented
-[here](https://github.com/zorkow/speech-rule-engine)
-
-```ts
-set static textToSpeechRulesOptions(value): void
-```
-
-• **value**: `Record`\<`string`, `string`\>
-
-`Readonly`\<`Record`\<`string`, `string`\>\>
 
 </MemberCard>
 
@@ -7393,21 +7174,6 @@ Reset the undo stack
 </MemberCard>
 
 #### Virtual Keyboard
-
-<a id="keypressvibration" name="keypressvibration"></a>
-
-<MemberCard>
-
-##### MathfieldElement.keypressVibration
-
-```ts
-static keypressVibration: boolean = true;
-```
-
-When a key on the virtual keyboard is pressed, produce a short haptic
-feedback, if the device supports it.
-
-</MemberCard>
 
 <a id="mathvirtualkeyboardpolicy" name="mathvirtualkeyboardpolicy"></a>
 
