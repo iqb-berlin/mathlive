@@ -298,6 +298,7 @@ export interface VirtualKeyboardInterface extends VirtualKeyboardOptions {
   show(options?: { animate: boolean }): void;
   hide(options?: { animate: boolean }): void;
   visible: boolean;
+  shiftPressCount: number;
   readonly isShifted: boolean;
   readonly boundingRect: DOMRect;
 
