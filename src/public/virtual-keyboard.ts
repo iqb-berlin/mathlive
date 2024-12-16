@@ -295,7 +295,11 @@ export interface MathfieldProxy {
  * @category Virtual Keyboard
  */
 export interface VirtualKeyboardInterface extends VirtualKeyboardOptions {
-  show(options?: { animate: boolean }): void;
+  show(options?: {
+    animate?: boolean;
+    firstLayer?: boolean;
+    resetShift?: boolean;
+  }): void;
   hide(options?: { animate: boolean }): void;
   visible: boolean;
   shiftPressCount: number;
