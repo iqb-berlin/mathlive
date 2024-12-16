@@ -1639,9 +1639,6 @@ import "https://unpkg.com/@cortex-js/compute-engine?module";
         })
       );
     });
-
-    // Load the fonts
-    console.log('Loading fonts in connectedCallback');
   }
 
   /**

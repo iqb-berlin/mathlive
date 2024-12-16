@@ -429,7 +429,6 @@ function makeSyntheticKeycap(element: HTMLElement): void {
 function injectStylesheets(): void {
   injectStylesheet('virtual-keyboard');
   injectStylesheet('core');
-  console.log('injectStylesheets');
 }
 
 export function releaseStylesheets(): void {
