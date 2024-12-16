@@ -1,6 +1,6 @@
 {
   "name": "@iqb/mathlive",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A web component for math input based on github.com/arnog/mathlive",
   "license": "MIT",
   "files": [
@@ -45,7 +45,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:iqb-berlin/mathlive.git"
+    "url": "https://github.com/iqb-berlin/mathlive.git"
   },
   "bugs": "https://github.com/iqb-berlin/mathlive/issues",
   "scripts": {

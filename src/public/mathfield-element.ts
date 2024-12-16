@@ -113,6 +113,7 @@ declare global {
     // Virtual Keyboard events
     'before-virtual-keyboard-toggle': Event;
     'virtual-keyboard-toggle': Event;
+    'virtual-keyboard-layer-change': Event;
   }
 }
 

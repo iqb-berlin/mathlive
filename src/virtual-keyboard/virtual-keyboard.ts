@@ -74,7 +74,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
         ?.classList.remove('is-visible');
       newActive.classList.add('is-visible');
     }
-
+    this.dispatchEvent(new Event('virtual-keyboard-layer-change'));
     this.render();
   }
 
