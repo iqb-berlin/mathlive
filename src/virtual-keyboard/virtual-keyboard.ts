@@ -59,9 +59,6 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
   }
 
   set currentLayer(id: string) {
-    console.log('currentLayer', id);
-    console.log('this._element', this.getLayer(id));
-    console.log('this.normalizedLayouts', this.normalizedLayouts);
     if (!this._element) {
       this.latentLayer = id;
       return;
