@@ -423,7 +423,11 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     }
   }
 
-  show(options?: { animate?: boolean; firstLayer?: boolean }): void {
+  show(options?: {
+    animate?: boolean;
+    firstLayer?: boolean;
+    resetShift?: boolean;
+  }): void {
     if (this._visible) return;
 
     const container = this.container;
@@ -464,6 +468,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
       );
       const layer = options?.firstLayer ? undefined : this.latentLayer;
       this.currentLayer = layer as string;
+      if (options?.resetShift) this.shiftPressCount = 0;
     }
 
     this._visible = true;
