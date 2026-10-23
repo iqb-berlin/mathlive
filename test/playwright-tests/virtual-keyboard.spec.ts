@@ -164,3 +164,46 @@ test('Switch layer by shift', async ({ page }) => {
     .evaluate((mfe: MathfieldElement) => mfe.value);
   expect(latex).toBe('Aa');
 });
+
+test('Shift survives the mouseup Safari on iOS sends after a tap', async ({
+  page,
+}) => {
+  await page.goto('/dist/playwright-test-page/');
+
+  await page.locator('.ML__virtual-keyboard-toggle').nth(0).click();
+  await page.getByRole('toolbar').getByText('abc').click();
+
+  const result = await page.evaluate(() => {
+    // Replay the sequence Safari on iOS produces for a tap: pointer events
+    // with `pointerType: 'touch'`, followed by a compatibility `mouseup`.
+    const tap = (keycap: Element) => {
+      const options = {
+        bubbles: true,
+        cancelable: true,
+        pointerType: 'touch',
+        isPrimary: true,
+        pointerId: 1,
+      };
+      keycap.dispatchEvent(new PointerEvent('pointerdown', options));
+      keycap.dispatchEvent(new PointerEvent('pointerup', options));
+      window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    };
+    const keycap = (label: string) =>
+      [
+        ...document.querySelectorAll('.MLK__layer.is-visible .MLK__keycap'),
+      ].find((el) => el.textContent?.trim() === label)!;
+
+    tap(document.querySelector('.MLK__layer.is-visible .shift')!);
+    const afterShift = window.mathVirtualKeyboard.isShifted;
+    tap(keycap('Q'));
+    const afterLetter = window.mathVirtualKeyboard.isShifted;
+    return { afterShift, afterLetter };
+  });
+
+  expect(result).toEqual({ afterShift: true, afterLetter: false });
+
+  const latex = await page
+    .locator('#mf-1')
+    .evaluate((mfe: MathfieldElement) => mfe.value);
+  expect(latex).toBe('Q');
+});
