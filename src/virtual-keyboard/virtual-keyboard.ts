@@ -96,6 +96,13 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     this.render();
   }
 
+  /**
+   * The `pointerType` of the most recent `pointerdown`. Used to ignore the
+   * compatibility mouse events Safari on iOS dispatches after a tap, even
+   * when the `pointerdown` was default-prevented.
+   */
+  private _lastPointerType: string | undefined;
+
   get isShifted(): boolean {
     return this._shiftPressCount > 0;
   }
@@ -454,6 +461,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
           ? `calc(${padding} + ${keyboardHeight}px)`
           : `${keyboardHeight}px`;
       }
+      window.addEventListener('pointerdown', this, { capture: true });
       window.addEventListener('mouseup', this);
       window.addEventListener('blur', this);
       window.addEventListener('keydown', this, { capture: true });
@@ -507,6 +515,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
       if (plate) this.observer.unobserve(plate);
 
       // Remove the element from the DOM
+      window.removeEventListener('pointerdown', this, { capture: true });
       window.removeEventListener('mouseup', this);
       window.removeEventListener('blur', this);
       window.removeEventListener('keydown', this, { capture: true });
@@ -556,7 +565,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
   handleEvent(
     evt:
       | (MessageEvent<VirtualKeyboardMessage> & { type: 'message' })
-      | (PointerEvent & { type: 'contextmenu' | 'mouseup' })
+      | (PointerEvent & { type: 'contextmenu' | 'mouseup' | 'pointerdown' })
       | (KeyboardEvent & { type: 'keydown' | 'keyup' })
       | (FocusEvent & { type: 'blur' })
   ): void {
@@ -584,11 +593,24 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     if (!this._element) return;
 
     switch (evt.type) {
+      case 'pointerdown':
+        this._lastPointerType = evt.pointerType;
+        break;
+
       case 'mouseup':
       case 'blur':
         // Safari on iOS will aggressively attempt to select when there is a long
         // press. Restore the userSelect on mouse up
         document.body.style.userSelect = '';
+
+        // Safari on iOS sends a `mouseup` after a tap (finger or pen).
+        // Resetting on it would undo a tap on the Shift keycap before the
+        // next keycap is tapped.
+        if (
+          evt.type === 'mouseup' &&
+          (this._lastPointerType === 'touch' || this._lastPointerType === 'pen')
+        )
+          break;
 
         this.shiftPressCount = 0;
         break;
